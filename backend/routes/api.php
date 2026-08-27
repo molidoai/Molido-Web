@@ -8,6 +8,8 @@ use App\Http\Controllers\Erp\ProductController;
 use App\Http\Controllers\Erp\OrderController;
 use App\Http\Controllers\AI\ChatController;
 use App\Http\Controllers\AI\AgentController;
+use App\Http\Controllers\AI\TaskController;
+use App\Http\Controllers\AI\ApprovalController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -105,6 +107,29 @@ Route::prefix('v1')->group(function () {
                 ->middleware("permission:erp.order.update");
         });
 
+
+
+        // AI Tasks (Inbox)
+        Route::prefix("ai/tasks")->group(function () {
+            Route::get("/", [TaskController::class, "index"])
+                ->middleware("permission:ai.agent.execute");
+            Route::post("/", [TaskController::class, "store"])
+                ->middleware("permission:ai.agent.execute");
+            Route::get("/{id}", [TaskController::class, "show"])
+                ->middleware("permission:ai.agent.execute");
+            Route::patch("/{id}/status", [TaskController::class, "updateStatus"])
+                ->middleware("permission:ai.agent.execute");
+        });
+
+        // Human Approvals
+        Route::prefix("ai/approvals")->group(function () {
+            Route::get("/", [ApprovalController::class, "index"])
+                ->middleware("permission:ai.agent.approve");
+            Route::post("/", [ApprovalController::class, "store"])
+                ->middleware("permission:ai.agent.execute");
+            Route::post("/{id}/review", [ApprovalController::class, "review"])
+                ->middleware("permission:ai.agent.approve");
+        });
 
         // AI Agents
         Route::prefix("ai/agents")->group(function () {

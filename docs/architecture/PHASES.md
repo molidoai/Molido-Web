@@ -1,19 +1,25 @@
 # MOLIDO CORE — Implementation Phases
 
-## Phase 0–6 ✅
+## Phase 0–7 ✅
 
-## Phase 7 — Agent Router + AI Workforce Foundation ✅
-- AgentRouter service (intent-based + explicit slug routing)
-- AiAgent model
-- AiAgentSeeder with 8 system agents:
-  - General, Sales, Support, CRM, ERP, Marketing, Finance, Technical
-- AgentController (list + show)
-- ChatController now resolves agent and uses agent system prompt
+## Phase 8 — AI Task System + Human Approval ✅
+- Tables: ai_tasks, approvals
+- Models: AiTask, Approval
+- TaskController (Inbox):
+  - List / create / show / update status
+  - Statuses: pending, working, waiting_approval, completed, failed, cancelled
+- ApprovalController:
+  - List pending approvals
+  - Create approval request
+  - Review (approve / reject)
+- Risk levels + expiry (24h)
+- Linked task status updates
+- Permissions: ai.agent.execute, ai.agent.approve
 - API:
-  - GET /api/v1/ai/agents
-  - GET /api/v1/ai/agents/{slug}
+  - /api/v1/ai/tasks
+  - /api/v1/ai/approvals
 
-## Phase 8 — AI Task System + Human Approval (Next)
-## Phase 9+ — Marketplace, Payment, etc.
+## Phase 9 — Knowledge Base + Lightweight RAG (Next)
+## Phase 10+ — Marketplace, Payment, Subscription...
 
 **Rule:** Never mark a phase DONE until tests + security checks pass.
