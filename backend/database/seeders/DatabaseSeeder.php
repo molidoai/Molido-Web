@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
             RolePermissionSeeder::class,
             AiAgentSeeder::class,
             ModuleSeeder::class,
+            PlanSeeder::class,
         ]);
     }
 }

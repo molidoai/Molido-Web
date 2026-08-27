@@ -1,27 +1,26 @@
 # MOLIDO CORE — Implementation Phases
 
-## Phase 0–10 ✅
+## Phase 0–11 ✅
 
-## Phase 11 — Internet Payment Gateway ✅
-- Tables: payment_transactions, invoices
-- Models: PaymentTransaction, Invoice
-- PaymentProviderInterface (provider-agnostic)
-- MockPaymentProvider (sandbox)
-- PaymentService:
-  - initiate module payment
-  - verify + activate entitlement (idempotent)
-  - amount check
-  - invoice creation on success
-- Only verified payment activates module
-- Duplicate callbacks are safe
+## Phase 12 — Subscription + Trial ✅
+- Tables: plans, subscriptions
+- Models: Plan, Subscription
+- SubscriptionService: subscribe, cancel, processExpirations
+- Trial days configurable per plan
+- Grace period (default 3 days)
+- Statuses: trialing, active, past_due, cancelled, expired, suspended
+- Sync with Entitlements
+- PlanSeeder linked to modules
 - API:
-  - POST /api/v1/payments/initiate
-  - GET  /api/v1/payments
-  - GET  /api/v1/payments/{uuid}
-  - GET  /api/v1/payments/mock-callback (dev)
-  - POST /api/v1/payments/verify
+  - GET  /api/v1/subscriptions/plans
+  - GET  /api/v1/subscriptions
+  - POST /api/v1/subscriptions/subscribe
+  - POST /api/v1/subscriptions/{id}/cancel
 
-## Phase 12 — Subscription + Trial polish (Next)
-## Phase 13+ — Security, Audit polish, Deployment docs, Frontend...
+## Next recommended
+- Phase 13: Audit polish + Feature Flags API
+- Phase 14: Frontend Command Center (React)
+- Phase 15: Deployment docs (VPS + cPanel)
+- Full test suite
 
 **Rule:** Never mark a phase DONE until tests + security checks pass.
