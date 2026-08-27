@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Customer\CustomerController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,7 +29,22 @@ Route::prefix('v1')->group(function () {
             Route::get('/me', [AuthController::class, 'me']);
         });
 
-        // Example permission-protected routes (will expand in later phases)
-        // Route::get('/customers', ...)->middleware('permission:crm.customer.read');
+        // Customer Center (central identity)
+        Route::prefix('customers')->group(function () {
+            Route::get('/', [CustomerController::class, 'index'])
+                ->middleware('permission:crm.customer.read');
+
+            Route::post('/', [CustomerController::class, 'store'])
+                ->middleware('permission:crm.customer.create');
+
+            Route::get('/{id}', [CustomerController::class, 'show'])
+                ->middleware('permission:crm.customer.read');
+
+            Route::put('/{id}', [CustomerController::class, 'update'])
+                ->middleware('permission:crm.customer.update');
+
+            Route::delete('/{id}', [CustomerController::class, 'destroy'])
+                ->middleware('permission:crm.customer.delete');
+        });
     });
 });
