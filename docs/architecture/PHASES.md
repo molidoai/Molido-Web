@@ -6,6 +6,7 @@
 - composer.json / package.json
 - .env.example
 - .gitignore
+- 3D Landing page
 
 ## Phase 1 — Core + Database ✅
 - Organization (multi-tenant root)
@@ -16,15 +17,19 @@
 - Audit Logs table
 - Core migration
 
-## Phase 2 — Authentication + RBAC (Next)
-- Registration / Login / Logout
-- Password reset
-- Sanctum API tokens
-- Role-based middleware
-- Permission checks
-- Seed default roles & permissions
+## Phase 2 — Authentication + RBAC ✅
+- Registration (creates Organization + Admin user)
+- Login with Rate Limiting
+- Logout
+- Current user profile (`/me`)
+- Laravel Sanctum token authentication
+- CheckPermission middleware
+- RolePermissionSeeder with all initial roles & permissions:
+  - Super Admin, Admin, Manager, Employee, Sales, Support, Accountant
+  - Customer, AI Agent, Virtual Employee
+- Default trial period (14 days)
 
-## Phase 3 — Customer Center
+## Phase 3 — Customer Center (Next)
 - Central customer CRUD
 - Link to User / Organization
 - Integration points for CRM / Chat / Orders
