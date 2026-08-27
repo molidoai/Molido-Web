@@ -10,6 +10,7 @@ use App\Http\Controllers\AI\ChatController;
 use App\Http\Controllers\AI\AgentController;
 use App\Http\Controllers\AI\TaskController;
 use App\Http\Controllers\AI\ApprovalController;
+use App\Http\Controllers\Knowledge\KnowledgeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -108,6 +109,18 @@ Route::prefix('v1')->group(function () {
         });
 
 
+
+
+        // Knowledge Base + Lightweight RAG
+        Route::prefix("knowledge")->group(function () {
+            Route::get("/", [KnowledgeController::class, "index"]);
+            Route::post("/", [KnowledgeController::class, "store"]);
+            Route::get("/search", [KnowledgeController::class, "search"]);
+            Route::get("/retrieve", [KnowledgeController::class, "retrieve"]);
+            Route::get("/{id}", [KnowledgeController::class, "show"]);
+            Route::put("/{id}", [KnowledgeController::class, "update"]);
+            Route::delete("/{id}", [KnowledgeController::class, "destroy"]);
+        });
 
         // AI Tasks (Inbox)
         Route::prefix("ai/tasks")->group(function () {
