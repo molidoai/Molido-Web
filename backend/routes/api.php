@@ -6,6 +6,7 @@ use App\Http\Controllers\Crm\LeadController;
 use App\Http\Controllers\Crm\DealController;
 use App\Http\Controllers\Erp\ProductController;
 use App\Http\Controllers\Erp\OrderController;
+use App\Http\Controllers\AI\ChatController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -101,6 +102,18 @@ Route::prefix('v1')->group(function () {
                 ->middleware("permission:erp.order.update");
             Route::delete("/{id}", [OrderController::class, "destroy"])
                 ->middleware("permission:erp.order.update");
+        });
+
+        // AI Chat
+        Route::prefix("ai")->group(function () {
+            Route::get("/conversations", [ChatController::class, "conversations"])
+                ->middleware("permission:ai.chat.use");
+            Route::post("/conversations", [ChatController::class, "storeConversation"])
+                ->middleware("permission:ai.chat.use");
+            Route::get("/conversations/{id}/messages", [ChatController::class, "messages"])
+                ->middleware("permission:ai.chat.use");
+            Route::post("/conversations/{id}/send", [ChatController::class, "send"])
+                ->middleware("permission:ai.chat.use");
         });
     });
 });
