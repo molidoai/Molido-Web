@@ -56,3 +56,22 @@ After `db:seed`:
 - Sample plans (monthly/yearly)
 
 First registered user becomes **Admin** of a new Organization (14-day trial on org).
+
+## Frontend (Command Center)
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Open http://localhost:5173
+
+Proxy to API is configured for `/api` → `http://localhost:8000`.
+
+For production:
+
+```bash
+npm run build
+# serve dist/ or deploy behind same domain
+```
