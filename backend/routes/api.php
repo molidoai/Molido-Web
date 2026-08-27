@@ -4,6 +4,8 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Crm\LeadController;
 use App\Http\Controllers\Crm\DealController;
+use App\Http\Controllers\Erp\ProductController;
+use App\Http\Controllers\Erp\OrderController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -71,6 +73,34 @@ Route::prefix('v1')->group(function () {
                 ->middleware('permission:crm.customer.update');
             Route::delete('/{id}', [DealController::class, 'destroy'])
                 ->middleware('permission:crm.customer.update');
+        });
+
+        // ERP — Products
+        Route::prefix("erp/products")->group(function () {
+            Route::get("/", [ProductController::class, "index"])
+                ->middleware("permission:erp.order.read");
+            Route::post("/", [ProductController::class, "store"])
+                ->middleware("permission:erp.order.create");
+            Route::get("/{id}", [ProductController::class, "show"])
+                ->middleware("permission:erp.order.read");
+            Route::put("/{id}", [ProductController::class, "update"])
+                ->middleware("permission:erp.order.update");
+            Route::delete("/{id}", [ProductController::class, "destroy"])
+                ->middleware("permission:erp.order.update");
+        });
+
+        // ERP — Orders
+        Route::prefix("erp/orders")->group(function () {
+            Route::get("/", [OrderController::class, "index"])
+                ->middleware("permission:erp.order.read");
+            Route::post("/", [OrderController::class, "store"])
+                ->middleware("permission:erp.order.create");
+            Route::get("/{id}", [OrderController::class, "show"])
+                ->middleware("permission:erp.order.read");
+            Route::put("/{id}", [OrderController::class, "update"])
+                ->middleware("permission:erp.order.update");
+            Route::delete("/{id}", [OrderController::class, "destroy"])
+                ->middleware("permission:erp.order.update");
         });
     });
 });
