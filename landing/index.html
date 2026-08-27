@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="MOLIDO — پلتفرم عملیاتی کسب‌وکار مبتنی بر هوش مصنوعی. چت‌بات، نیروی کار مجازی، CRM، ERP و پرداخت اینترنتی." />
+  <meta name="theme-color" content="#07070c" />
+  <title>MOLIDO — AI-Native Business Operating Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07070c;
+      --bg2: #0c0c14;
+      --cyan: #00e5ff;
+      --cyan-dim: rgba(0, 229, 255, 0.15);
+      --purple: #a78bfa;
+      --purple-dim: rgba(167, 139, 250, 0.15);
+      --white: #f0f4ff;
+      --muted: #94a3b8;
+      --card: rgba(12, 12, 22, 0.72);
+      --border: rgba(255, 255, 255, 0.07);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Vazirmatn', system-ui, sans-serif;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* ========== 3D Canvas ========== */
+    #canvas-container {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+    canvas { display: block; width: 100%; height: 100%; }
+
+    /* ========== Overlay ========== */
+    .overlay {
+      position: relative;
+      z-index: 10;
+    }
+
+    /* ========== Navbar ========== */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.1rem 2.5rem;
+      background: linear-gradient(to bottom, rgba(7,7,12,0.92) 40%, transparent);
+      backdrop-filter: blur(10px);
+      transition: background 0.3s;
+    }
+    nav.scrolled {
+      background: rgba(7,7,12,0.95);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 900;
+      font-size: 1.55rem;
+      letter-spacing: 3px;
+      background: linear-gradient(90deg, var(--cyan), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 500;
+      transition: color 0.25s;
+    }
+    .nav-links a:hover { color: var(--cyan); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.5rem;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.92rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--cyan), #00b4d8);
+      color: #001018;
+      box-shadow: 0 0 28px rgba(0, 229, 255, 0.35);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 42px rgba(0, 229, 255, 0.55);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid rgba(0, 229, 255, 0.35);
+    }
+    .btn-ghost:hover {
+      border-color: var(--cyan);
+      background: var(--cyan-dim);
+    }
+    .btn-lg {
+      padding: 0.95rem 2rem;
+      font-size: 1rem;
+    }
+
+    /* ========== Hero ========== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 7rem 1.5rem 5rem;
+      position: relative;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1.1rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      background: var(--cyan-dim);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      color: var(--cyan);
+      margin-bottom: 1.6rem;
+      letter-spacing: 1.2px;
+    }
+    .badge-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 8px var(--cyan);
+      animation: blink 1.8s infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
+    }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(3rem, 9vw, 5.8rem);
+      font-weight: 900;
+      letter-spacing: 5px;
+      line-height: 1.05;
+      margin-bottom: 1.1rem;
+      background: linear-gradient(105deg, #ffffff 10%, var(--cyan) 45%, var(--purple) 90%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: clamp(1.05rem, 2.4vw, 1.35rem);
+      color: var(--muted);
+      max-width: 620px;
+      margin: 0 auto 2.6rem;
+      font-weight: 300;
+      line-height: 1.75;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 3.5rem;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 2.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+    .stat {
+      text-align: center;
+    }
+    .stat-value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--cyan);
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    /* ========== Sections common ========== */
+    section {
+      padding: 5.5rem 1.5rem;
+      position: relative;
+    }
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+    }
+    .section-header {
+      text-align: center;
+      margin-bottom: 3.2rem;
+    }
+    .section-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.6rem, 3.5vw, 2.1rem);
+      letter-spacing: 2px;
+      margin-bottom: 0.8rem;
+    }
+    .section-desc {
+      color: var(--muted);
+      max-width: 540px;
+      margin: 0 auto;
+      font-size: 1.02rem;
+    }
+
+    /* ========== Features ========== */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.4rem;
+    }
+    .feature-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1.2rem;
+      padding: 1.8rem;
+      backdrop-filter: blur(14px);
+      transition: all 0.35s ease;
+      height: 100%;
+    }
+    .feature-card:hover {
+      border-color: rgba(0, 229, 255, 0.32);
+      transform: translateY(-7px);
+      box-shadow: 0 22px 45px rgba(0,0,0,0.45);
+    }
+    .feature-icon {
+      width: 50px; height: 50px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--cyan-dim), var(--purple-dim));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.45rem;
+      margin-bottom: 1.25rem;
+    }
+    .feature-card h3 {
+      font-size: 1.12rem;
+      font-weight: 600;
+      margin-bottom: 0.55rem;
+    }
+    .feature-card p {
+      color: var(--muted);
+      font-size: 0.93rem;
+      line-height: 1.65;
+    }
+
+    /* ========== How it works ========== */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      counter-reset: step;
+    }
+    .step {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1.2rem;
+      padding: 1.8rem 1.5rem;
+      text-align: center;
+      position: relative;
+    }
+    .step-num {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--cyan);
+      opacity: 0.9;
+      margin-bottom: 0.8rem;
+    }
+    .step h3 {
+      font-size: 1.05rem;
+      margin-bottom: 0.5rem;
+    }
+    .step p {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    /* ========== Tech stack ========== */
+    .tech-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+    }
+    .tech-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.6rem 1.3rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+      transition: all 0.25s;
+    }
+    .tech-item:hover {
+      border-color: rgba(0, 229, 255, 0.4);
+      color: var(--cyan);
+    }
+
+    /* ========== CTA ========== */
+    .cta-section {
+      padding: 4rem 1.5rem 6rem;
+    }
+    .cta-box {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 3.2rem 2rem;
+      text-align: center;
+      background: linear-gradient(145deg, rgba(0,229,255,0.07), rgba(167,139,250,0.07));
+      border: 1px solid rgba(0, 229, 255, 0.22);
+      border-radius: 1.6rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-box::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(0,229,255,0.12), transparent 60%);
+      pointer-events: none;
+    }
+    .cta-box h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.75rem;
+      margin-bottom: 0.9rem;
+      position: relative;
+    }
+    .cta-box p {
+      color: var(--muted);
+      margin-bottom: 2rem;
+      position: relative;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      position: relative;
+    }
+
+    /* ========== Footer ========== */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+    }
+    .footer-logo {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 1.2rem;
+      letter-spacing: 2px;
+      background: linear-gradient(90deg, var(--cyan), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.8rem;
+    }
+    .footer-text {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      margin: 1.2rem 0;
+      flex-wrap: wrap;
+    }
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      transition: color 0.25s;
+    }
+    .footer-links a:hover { color: var(--cyan); }
+
+    /* ========== Loader ========== */
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.7s ease, visibility 0.7s;
+    }
+    #loader.hide {
+      opacity: 0;
+      visibility: hidden;
+    }
+    .loader-logo {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2rem;
+      font-weight: 900;
+      letter-spacing: 6px;
+      background: linear-gradient(90deg, var(--cyan), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+    .loader-bar {
+      width: 120px;
+      height: 2px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 2px;
+      margin-top: 1.5rem;
+      overflow: hidden;
+    }
+    .loader-bar-inner {
+      height: 100%;
+      width: 40%;
+      background: linear-gradient(90deg, var(--cyan), var(--purple));
+      border-radius: 2px;
+      animation: load 1.2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+    @keyframes load {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(350%); }
+    }
+
+    /* ========== Mobile ========== */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.2rem; }
+      .nav-links { display: none; }
+      .hero { padding-top: 6rem; }
+      .hero-stats { gap: 1.5rem; }
+      .stat-value { font-size: 1.25rem; }
+      section { padding: 4rem 1.2rem; }
+    }
+
+    /* Smooth reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <!-- Loader -->
+  <div id="loader">
+    <div class="loader-logo">MOLIDO</div>
+    <div class="loader-bar"><div class="loader-bar-inner"></div></div>
+  </div>
+
+  <!-- 3D Background -->
+  <div id="canvas-container"></div>
+
+  <!-- Navbar -->
+  <nav id="navbar">
+    <a href="#" class="logo">MOLIDO</a>
+    <ul class="nav-links">
+      <li><a href="#features">قابلیت‌ها</a></li>
+      <li><a href="#how">نحوه کار</a></li>
+      <li><a href="#tech">تکنولوژی</a></li>
+      <li><a href="#start">شروع</a></li>
+    </ul>
+    <a href="#start" class="btn btn-primary">شروع رایگان</a>
+  </nav>
+
+  <div class="overlay">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="badge">
+        <span class="badge-dot"></span>
+        AI-NATIVE • VERSION 1 READY
+      </div>
+      <h1>MOLIDO</h1>
+      <p class="subtitle">
+        پلتفرم عملیاتی کسب‌وکار مبتنی بر هوش مصنوعی<br>
+        چت‌بات هوشمند • نیروی کار مجازی • CRM • ERP • پرداخت اینترنتی
+      </p>
+      <div class="hero-cta">
+        <a href="#start" class="btn btn-primary btn-lg">شروع رایگان</a>
+        <a href="#features" class="btn btn-ghost btn-lg">مشاهده قابلیت‌ها</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-value">AI</div>
+          <div class="stat-label">از روز اول</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">cPanel</div>
+          <div class="stat-label">سازگار</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">VPS</div>
+          <div class="stat-label">آماده</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">۰ GPU</div>
+          <div class="stat-label">نیاز ندارد</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features">
+      <div class="container">
+        <div class="section-header reveal">
+          <h2 class="section-title">چرا MOLIDO؟</h2>
+          <p class="section-desc">همه چیزهایی که یک کسب‌وکار مدرن برای رشد با هوش مصنوعی نیاز دارد، در یک پلتفرم سبک و امن.</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card reveal">
+            <div class="feature-icon">🤖</div>
+            <h3>AI Chatbot از روز اول</h3>
+            <p>چت‌بات هوشمند با دانش کسب‌وکار شما، یکپارچه با CRM و ERP. قابلیت پاسخ‌گویی و اجرای اقدامات امن با تأیید انسانی.</p>
+          </div>
+          <div class="feature-card reveal">
+            <div class="feature-icon">👥</div>
+            <h3>نیروی کار مجازی</h3>
+            <p>کارمندان AI برای فروش، پشتیبانی، مالی، بازاریابی و عملیات. با سیستم تسک، Inbox و تأیید انسانی برای کارهای حساس.</p>
+          </div>
+          <div class="feature-card reveal">
+            <div class="feature-icon">📊</div>
+            <h3>CRM + ERP یکپارچه</h3>
+            <p>مدیریت مشتری، سرنخ، معامله، سفارش، موجودی، هزینه و گزارش‌ها در یک هسته مرکزی بدون تکرار هویت مشتری.</p>
+          </div>
+          <div class="feature-card reveal">
+            <div class="feature-icon">🛒</div>
+            <h3>مارکت‌پلیس ماژول</h3>
+            <p>فروش و فعال‌سازی ماژول‌ها با تریال، اشتراک ماهانه/سالانه و پرداخت اینترنتی واقعی و قابل‌تأیید.</p>
+          </div>
+          <div class="feature-card reveal">
+            <div class="feature-icon">🔒</div>
+            <h3>امنیت و RBAC کامل</h3>
+            <p>کنترل دسترسی دقیق، ایزولاسیون چندسازمانی، Audit کامل، Safety Gateway برای AI و جلوگیری از دسترسی غیرمجاز.</p>
+          </div>
+          <div class="feature-card reveal">
+            <div class="feature-icon">⚡</div>
+            <h3>سبک و آماده استقرار</h3>
+            <p>کار روی VPS معمولی و حتی هاست cPanel. بدون نیاز اجباری به Docker، Kubernetes، Redis یا Vector Database.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section id="how">
+      <div class="container">
+        <div class="section-header reveal">
+          <h2 class="section-title">نحوه کار</h2>
+          <p class="section-desc">از ثبت‌نام تا فعال‌سازی ماژول در چند مرحله ساده و امن.</p>
+        </div>
+        <div class="steps">
+          <div class="step reveal">
+            <div class="step-num">۰۱</div>
+            <h3>ثبت‌نام و هویت مرکزی</h3>
+            <p>یک هویت مشتری واحد که به همه ماژول‌ها متصل می‌شود.</p>
+          </div>
+          <div class="step reveal">
+            <div class="step-num">۰۲</div>
+            <h3>انتخاب ماژول</h3>
+            <p>از مارکت‌پلیس ماژول مورد نیاز را انتخاب و تریال را شروع کنید.</p>
+          </div>
+          <div class="step reveal">
+            <div class="step-num">۰۳</div>
+            <h3>پرداخت امن</h3>
+            <p>پرداخت اینترنتی با تأیید واقعی. فقط بعد از Verify فعال می‌شود.</p>
+          </div>
+          <div class="step reveal">
+            <div class="step-num">۰۴</div>
+            <h3>AI Workforce فعال</h3>
+            <p>کارمندان مجازی و چت‌بات آماده کار با کسب‌وکار شما هستند.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tech -->
+    <section id="tech">
+      <div class="container">
+        <div class="section-header reveal">
+          <h2 class="section-title">تکنولوژی</h2>
+          <p class="section-desc">استک مدرن، سبک و آماده برای مقیاس‌پذیری تدریجی.</p>
+        </div>
+        <div class="tech-grid reveal">
+          <span class="tech-item">Laravel</span>
+          <span class="tech-item">React + Vite</span>
+          <span class="tech-item">Tailwind CSS</span>
+          <span class="tech-item">MySQL</span>
+          <span class="tech-item">Database Queue</span>
+          <span class="tech-item">AI Gateway</span>
+          <span class="tech-item">Safety Gateway</span>
+          <span class="tech-item">RBAC</span>
+          <span class="tech-item">Multi-tenant</span>
+          <span class="tech-item">Payment Plugins</span>
+          <span class="tech-item">Nginx / Apache</span>
+          <span class="tech-item">cPanel Ready</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="cta-section" id="start">
+      <div class="cta-box reveal">
+        <h2>آماده شروع هستید؟</h2>
+        <p>نسخه اول MOLIDO با چت‌بات، نیروی کار مجازی، CRM، ERP و پرداخت اینترنتی آماده است.</p>
+        <div class="cta-buttons">
+          <a href="#" class="btn btn-primary btn-lg">درخواست دسترسی اولیه</a>
+          <a href="#features" class="btn btn-ghost btn-lg">بیشتر بدانید</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-logo">MOLIDO</div>
+      <div class="footer-links">
+        <a href="#features">قابلیت‌ها</a>
+        <a href="#how">نحوه کار</a>
+        <a href="#tech">تکنولوژی</a>
+        <a href="#start">شروع</a>
+      </div>
+      <p class="footer-text">© 2026 MOLIDO Core — AI-Native Business Operating Platform<br>
+        Lightweight • Secure • cPanel Compatible • VPS Ready</p>
+    </footer>
+  </div>
+
+  <!-- Three.js -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+    import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+    import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x07070c, 0.032);
+
+    const camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.1, 80);
+    camera.position.set(0, 0.3, 7.5);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0x07070c, 1);
+    container.appendChild(renderer.domElement);
+
+    // Post-processing
+    const composer = new EffectComposer(renderer);
+    composer.addPass(new RenderPass(scene, camera));
+    const bloom = new UnrealBloomPass(
+      new THREE.Vector2(window.innerWidth, window.innerHeight),
+      0.9, 0.42, 0.72
+    );
+    composer.addPass(bloom);
+
+    // Lights
+    scene.add(new THREE.AmbientLight(0x1a1a2e, 0.55));
+    const light1 = new THREE.PointLight(0x00e5ff, 2.8, 22);
+    light1.position.set(5, 3.5, 3);
+    scene.add(light1);
+    const light2 = new THREE.PointLight(0xa78bfa, 2.2, 20);
+    light2.position.set(-5, -2.5, 2);
+    scene.add(light2);
+
+    // Particles
+    const COUNT = 1400;
+    const pos = new Float32Array(COUNT * 3);
+    const col = new Float32Array(COUNT * 3);
+    const cCyan = new THREE.Color(0x00e5ff);
+    const cPurple = new THREE.Color(0xa78bfa);
+    const cWhite = new THREE.Color(0xe0e7ff);
+
+    for (let i = 0; i < COUNT; i++) {
+      const i3 = i * 3;
+      pos[i3]     = (Math.random() - 0.5) * 32;
+      pos[i3 + 1] = (Math.random() - 0.5) * 22;
+      pos[i3 + 2] = (Math.random() - 0.5) * 22 - 4;
+
+      const r = Math.random();
+      const c = r > 0.72 ? cPurple : (r > 0.28 ? cCyan : cWhite);
+      col[i3] = c.r; col[i3 + 1] = c.g; col[i3 + 2] = c.b;
+    }
+
+    const pGeo = new THREE.BufferGeometry();
+    pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    pGeo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+
+    const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({
+      size: 0.07,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.82,
+      sizeAttenuation: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    }));
+    scene.add(particles);
+
+    // Core group
+    const core = new THREE.Group();
+    scene.add(core);
+
+    // Outer wireframe
+    const ico = new THREE.Mesh(
+      new THREE.IcosahedronGeometry(1.45, 1),
+      new THREE.MeshStandardMaterial({
+        color: 0x00e5ff,
+        emissive: 0x00e5ff,
+        emissiveIntensity: 0.38,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.68
+      })
+    );
+    core.add(ico);
+
+    // Inner solid
+    const inner = new THREE.Mesh(
+      new THREE.IcosahedronGeometry(0.88, 0),
+      new THREE.MeshStandardMaterial({
+        color: 0xa78bfa,
+        emissive: 0xa78bfa,
+        emissiveIntensity: 0.45,
+        transparent: true,
+        opacity: 0.28
+      })
+    );
+    core.add(inner);
+
+    // Rings
+    const ringGeo = new THREE.TorusGeometry(2.15, 0.012, 12, 120);
+    const ring1 = new THREE.Mesh(ringGeo, new THREE.MeshBasicMaterial({
+      color: 0x00e5ff, transparent: true, opacity: 0.48
+    }));
+    ring1.rotation.x = Math.PI / 2.4;
+    core.add(ring1);
+
+    const ring2 = new THREE.Mesh(ringGeo, new THREE.MeshBasicMaterial({
+      color: 0xa78bfa, transparent: true, opacity: 0.38
+    }));
+    ring2.rotation.x = Math.PI / 1.7;
+    ring2.rotation.y = 0.7;
+    core.add(ring2);
+
+    // Orbiting nodes
+    const nodes = [];
+    const nodeGeo = new THREE.SphereGeometry(0.11, 14, 14);
+    for (let i = 0; i < 7; i++) {
+      const isCyan = i % 2 === 0;
+      const node = new THREE.Mesh(nodeGeo, new THREE.MeshStandardMaterial({
+        color: isCyan ? 0x00e5ff : 0xa78bfa,
+        emissive: isCyan ? 0x00e5ff : 0xa78bfa,
+        emissiveIntensity: 0.85
+      }));
+      node.userData = {
+        angle: (i / 7) * Math.PI * 2,
+        radius: 2.55 + (i % 3) * 0.18,
+        speed: 0.28 + Math.random() * 0.22,
+        yOff: Math.random() * Math.PI * 2
+      };
+      nodes.push(node);
+      core.add(node);
+    }
+
+    // Mouse
+    let mouseX = 0, mouseY = 0;
+    document.addEventListener('mousemove', (e) => {
+      mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+      mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+    });
+
+    // Resize
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      composer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // Scroll navbar
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // Reveal on scroll
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) e.target.classList.add('visible');
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => observer.observe(el));
+
+    // Animation loop
+    const clock = new THREE.Clock();
+    function animate() {
+      requestAnimationFrame(animate);
+      const t = clock.getElapsedTime();
+
+      ico.rotation.x = t * 0.14;
+      ico.rotation.y = t * 0.23;
+      inner.rotation.x = -t * 0.18;
+      inner.rotation.y = -t * 0.28;
+
+      ring1.rotation.z = t * 0.18;
+      ring2.rotation.z = -t * 0.13;
+
+      nodes.forEach(n => {
+        n.userData.angle += n.userData.speed * 0.0095;
+        n.position.x = Math.cos(n.userData.angle) * n.userData.radius;
+        n.position.z = Math.sin(n.userData.angle) * n.userData.radius;
+        n.position.y = Math.sin(n.userData.angle * 1.4 + n.userData.yOff) * 0.55;
+      });
+
+      particles.rotation.y = t * 0.018;
+
+      camera.position.x += (mouseX * 1.15 - camera.position.x) * 0.035;
+      camera.position.y += (mouseY * 0.75 - camera.position.y) * 0.035;
+      camera.lookAt(0, 0, 0);
+
+      light1.intensity = 2.4 + Math.sin(t * 1.4) * 0.45;
+      light2.intensity = 1.9 + Math.sin(t * 1.15 + 1.2) * 0.35;
+
+      composer.render();
+    }
+
+    // Hide loader
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loader').classList.add('hide');
+      }, 800);
+    });
+
+    animate();
+  </script>
+</body>
+</html>
