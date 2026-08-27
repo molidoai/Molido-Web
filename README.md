@@ -2,144 +2,99 @@
 
 **Lightweight AI-Native Business Operating Platform**
 
-Version: 1.0.0-skeleton (Phase 0 + Phase 1)
+Version: **1.0.0-alpha** (Phases 0–12 complete)
+
+Repository: https://github.com/hidooch980/molido-core1
 
 ---
 
 ## What is MOLIDO?
 
-MOLIDO is a lightweight, secure, modular and scalable AI-native business platform that includes:
+MOLIDO is a lightweight, secure, modular AI-native business platform:
 
 - Authentication & RBAC
-- Customer Center
-- CRM Foundation
-- ERP Foundation
-- AI Chatbot
-- AI Gateway + Safety Gateway
-- AI Workforce (Virtual Employees)
-- Knowledge Base (Lightweight RAG)
-- Module Marketplace
-- Internet Payment Gateway
-- Orders, Subscriptions, Trials, Entitlements, Invoices
-- Multi-tenant foundation
-- Multi-language (Persian + English)
+- Customer Center (central identity)
+- CRM (Leads, Deals, …)
+- ERP (Products, Inventory, Orders)
+- AI Chatbot + AI Gateway + Safety Gateway
+- AI Workforce (8 system agents) + Task Inbox + Human Approval
+- Knowledge Base + Lightweight RAG (no Vector DB required)
+- Module Marketplace + Entitlements
+- Internet Payment Gateway (provider-agnostic + Mock)
+- Subscriptions & Trials
+- Multi-tenant foundation (`organization_id`)
 - cPanel + VPS ready
 
 ---
 
-## Architecture
+## Quick Start
 
-```
-LIGHTWEIGHT MODULAR MONOLITH
-
-Internet → Nginx/Apache → Laravel → MySQL → Database Queue → External AI APIs → External Payment Providers
-```
-
-Future-ready for gradual scaling (Redis, dedicated workers, microservices when needed).
-
----
-
-## Technology Stack
-
-| Layer        | Technology              |
-|--------------|-------------------------|
-| Backend      | Laravel 11 (PHP 8.3+)   |
-| Frontend     | React 18 + Vite + Tailwind |
-| Database     | MySQL 8                 |
-| Queue        | Database Queue (Redis optional) |
-| Cache        | File / Database         |
-| Auth         | Laravel Sanctum / Session |
-| AI           | Provider-agnostic Gateway |
-
----
-
-## Project Structure
-
-```
-MOLIDO/
-├── backend/          # Laravel application
-├── frontend/         # React + Vite application
-├── docs/             # Documentation
-├── scripts/          # Installation & deployment scripts
-└── README.md
-```
-
----
-
-## Current Progress
-
-### Phase 0 — Project Skeleton ✅
-- Full directory structure
-- Core configuration files
-- Documentation foundation
-- Installation guides
-
-### Phase 1 — Core + Database ✅
-- Core models (User, Organization, Customer, Role, Permission...)
-- Migrations for core tables
-- Multi-tenant foundation (`organization_id`)
-- Basic service interfaces
-
-### Next Phases (to be implemented)
-- Phase 2: Authentication + RBAC
-- Phase 3: Customer Center
-- Phase 4: CRM
-- ... (see original specification)
-
----
-
-## Quick Start (Development)
-
-### Requirements
-- PHP 8.3+
-- Composer
-- Node.js 20+
-- MySQL 8
-- Git
-
-### Backend Setup
+See **[INSTALL.md](INSTALL.md)**
 
 ```bash
 cd backend
 composer install
 cp .env.example .env
 php artisan key:generate
-# Configure DB credentials in .env
-php artisan migrate
-php artisan db:seed
+# configure DB
+php artisan migrate --seed
 php artisan serve
 ```
 
-### Frontend Setup
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
+API: `http://localhost:8000/api/v1`
 
 ---
 
 ## Deployment
 
-See detailed guides in `/docs`:
-
-- `docs/deployment/VPS_DEPLOYMENT.md`
-- `docs/deployment/CPANEL_DEPLOYMENT.md`
-- `docs/security/SECURITY.md`
+- [VPS (Nginx + Ubuntu)](docs/deployment/VPS_DEPLOYMENT.md)
+- [cPanel shared hosting](docs/deployment/CPANEL_DEPLOYMENT.md)
+- [Security notes](docs/security/SECURITY.md)
 
 ---
 
-## Important Principles
+## Implemented Phases
 
-1. Do not over-engineer
-2. AI Chatbot & AI Workforce from day one
-3. Payment must be verified before activation
-4. Human Approval for sensitive actions
-5. Full Audit trail
-6. Tenant isolation is mandatory
-7. cPanel compatibility must be preserved
-8. No mandatory Redis / Docker / Kubernetes / Vector DB
+| Phase | Description | Status |
+|-------|-------------|--------|
+| 0 | Project Skeleton | ✅ |
+| 1 | Core + Database | ✅ |
+| 2 | Auth + RBAC | ✅ |
+| 3 | Customer Center | ✅ |
+| 4 | CRM Foundation | ✅ |
+| 5 | ERP Foundation | ✅ |
+| 6 | AI Gateway + Safety | ✅ |
+| 7 | Agent Router + Workforce | ✅ |
+| 8 | Tasks + Human Approval | ✅ |
+| 9 | Knowledge + RAG | ✅ |
+| 10 | Module Marketplace | ✅ |
+| 11 | Payment Gateway | ✅ |
+| 12 | Subscription + Trial | ✅ |
+
+Details: [docs/architecture/PHASES.md](docs/architecture/PHASES.md)
+
+---
+
+## Tech Stack
+
+- Backend: Laravel 11 / PHP 8.3+
+- Frontend: React + Vite + Tailwind (structure ready)
+- DB: MySQL 8
+- Queue: Database (Redis optional later)
+- AI: External APIs via Gateway
+- Payment: Plugin interface + Mock provider
+
+---
+
+## Principles
+
+1. Do not over-engineer  
+2. AI Chatbot & Workforce from day one  
+3. Payment verified before activation  
+4. Human Approval for sensitive actions  
+5. Tenant isolation mandatory  
+6. cPanel compatibility preserved  
+7. No mandatory Redis / Docker / K8s / Vector DB  
 
 ---
 
