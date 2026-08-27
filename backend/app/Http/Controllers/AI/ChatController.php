@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AiConversation;
 use App\Models\AiMessage;
 use App\Services\AI\AIGateway;
+use App\Services\AI\AgentRouter;
 use Illuminate\Http\Request;
 
 class ChatController extends Controller
@@ -80,6 +81,7 @@ class ChatController extends Controller
 
         $validated = $request->validate([
             'message' => 'required|string|max:10000',
+            'agent' => 'nullable|string|max:50',
         ]);
 
         // Store user message
@@ -88,6 +90,18 @@ class ChatController extends Controller
             'role' => 'user',
             'content' => $validated['message'],
         ]);
+
+        // Resolve agent
+        $router = app(AgentRouter::class);
+        $agent = $router->resolve(
+            $validated['agent'] ?? null,
+            $validated['message'],
+            $user->organization_id
+        );
+
+        $systemContent = $agent
+            ? $router->buildSystemPrompt($agent)
+            : 'You are MOLIDO AI assistant. Answer helpfully in the user language. Do not invent business data. If action is needed, explain and wait for confirmation.';
 
         // Build context from last messages
         $history = $conversation->messages()
@@ -99,7 +113,7 @@ class ChatController extends Controller
 
         $systemPrompt = [
             'role' => 'system',
-            'content' => 'You are MOLIDO AI assistant. Answer helpfully in the user language. Do not invent business data. If action is needed, explain and wait for confirmation.',
+            'content' => $systemContent,
         ];
 
         $messages = array_merge([$systemPrompt], $history);
@@ -109,7 +123,7 @@ class ChatController extends Controller
             'organization_id' => $user->organization_id,
             'user_id' => $user->id,
             'mode' => $conversation->mode,
-            'agent' => 'general',
+            'agent' => $agent?->slug ?? 'general',
         ]);
 
         if (!$result['success']) {
