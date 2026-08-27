@@ -1,20 +1,21 @@
 # MOLIDO CORE — Implementation Phases
 
-## Phase 0–8 ✅
+## Phase 0–9 ✅
 
-## Phase 9 — Knowledge Base + Lightweight RAG ✅
-- Table: knowledge_articles
-- Model: KnowledgeArticle
-- KnowledgeSearch service (MySQL LIKE-based relevance scoring)
-- KnowledgeController: CRUD + search + retrieveForAI
-- No Vector DB required (interface ready for future)
-- System-wide + organization knowledge
+## Phase 10 — Module Marketplace ✅
+- Tables: modules, entitlements
+- Models: Module, Entitlement
+- ModuleController: list, show, activate (free/trial), myModules
+- ModuleSeeder with sample modules (CRM Pro, ERP Lite, AI Workforce...)
+- Entitlement status: active, trial, expired, suspended, cancelled
+- Paid modules return 402 until Payment phase
 - API:
-  - /api/v1/knowledge
-  - /api/v1/knowledge/search
-  - /api/v1/knowledge/retrieve
+  - GET  /api/v1/modules
+  - GET  /api/v1/modules/my
+  - GET  /api/v1/modules/{slug}
+  - POST /api/v1/modules/{slug}/activate
 
-## Phase 10 — Module Marketplace (Next)
-## Phase 11+ — Payment, Orders, Subscription, Entitlement...
+## Phase 11 — Internet Payment Gateway (Next)
+## Phase 12+ — Orders, Subscription, Invoice, Security hardening...
 
 **Rule:** Never mark a phase DONE until tests + security checks pass.

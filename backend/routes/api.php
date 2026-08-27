@@ -11,6 +11,7 @@ use App\Http\Controllers\AI\AgentController;
 use App\Http\Controllers\AI\TaskController;
 use App\Http\Controllers\AI\ApprovalController;
 use App\Http\Controllers\Knowledge\KnowledgeController;
+use App\Http\Controllers\Marketplace\ModuleController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -110,6 +111,16 @@ Route::prefix('v1')->group(function () {
 
 
 
+
+
+        // Module Marketplace
+        Route::prefix("modules")->group(function () {
+            Route::get("/", [ModuleController::class, "index"]);
+            Route::get("/my", [ModuleController::class, "myModules"]);
+            Route::get("/{slug}", [ModuleController::class, "show"]);
+            Route::post("/{slug}/activate", [ModuleController::class, "activate"])
+                ->middleware("permission:module.activate");
+        });
 
         // Knowledge Base + Lightweight RAG
         Route::prefix("knowledge")->group(function () {
