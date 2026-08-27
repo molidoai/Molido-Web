@@ -12,6 +12,7 @@ use App\Http\Controllers\AI\TaskController;
 use App\Http\Controllers\AI\ApprovalController;
 use App\Http\Controllers\Knowledge\KnowledgeController;
 use App\Http\Controllers\Marketplace\ModuleController;
+use App\Http\Controllers\Payment\PaymentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,6 +31,10 @@ Route::prefix('v1')->group(function () {
         Route::post('/register', [AuthController::class, 'register']);
         Route::post('/login', [AuthController::class, 'login']);
     });
+
+    // Public payment callback (providers + mock)
+    Route::get('/payments/mock-callback', [PaymentController::class, 'mockCallback']);
+    Route::post('/payments/verify', [PaymentController::class, 'verify']);
 
     // Protected routes
     Route::middleware('auth:sanctum')->group(function () {
@@ -112,6 +117,17 @@ Route::prefix('v1')->group(function () {
 
 
 
+
+
+        // Payments
+        Route::prefix("payments")->group(function () {
+            Route::get("/", [PaymentController::class, "index"])
+                ->middleware("permission:payment.view");
+            Route::post("/initiate", [PaymentController::class, "initiate"])
+                ->middleware("permission:payment.create");
+            Route::get("/{uuid}", [PaymentController::class, "show"])
+                ->middleware("permission:payment.view");
+        });
 
         // Module Marketplace
         Route::prefix("modules")->group(function () {

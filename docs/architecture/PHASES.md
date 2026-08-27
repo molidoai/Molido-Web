@@ -1,21 +1,27 @@
 # MOLIDO CORE — Implementation Phases
 
-## Phase 0–9 ✅
+## Phase 0–10 ✅
 
-## Phase 10 — Module Marketplace ✅
-- Tables: modules, entitlements
-- Models: Module, Entitlement
-- ModuleController: list, show, activate (free/trial), myModules
-- ModuleSeeder with sample modules (CRM Pro, ERP Lite, AI Workforce...)
-- Entitlement status: active, trial, expired, suspended, cancelled
-- Paid modules return 402 until Payment phase
+## Phase 11 — Internet Payment Gateway ✅
+- Tables: payment_transactions, invoices
+- Models: PaymentTransaction, Invoice
+- PaymentProviderInterface (provider-agnostic)
+- MockPaymentProvider (sandbox)
+- PaymentService:
+  - initiate module payment
+  - verify + activate entitlement (idempotent)
+  - amount check
+  - invoice creation on success
+- Only verified payment activates module
+- Duplicate callbacks are safe
 - API:
-  - GET  /api/v1/modules
-  - GET  /api/v1/modules/my
-  - GET  /api/v1/modules/{slug}
-  - POST /api/v1/modules/{slug}/activate
+  - POST /api/v1/payments/initiate
+  - GET  /api/v1/payments
+  - GET  /api/v1/payments/{uuid}
+  - GET  /api/v1/payments/mock-callback (dev)
+  - POST /api/v1/payments/verify
 
-## Phase 11 — Internet Payment Gateway (Next)
-## Phase 12+ — Orders, Subscription, Invoice, Security hardening...
+## Phase 12 — Subscription + Trial polish (Next)
+## Phase 13+ — Security, Audit polish, Deployment docs, Frontend...
 
 **Rule:** Never mark a phase DONE until tests + security checks pass.
