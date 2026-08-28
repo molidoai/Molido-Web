@@ -14,6 +14,9 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 use App\Services\AuditService;
+use App\Mail\WelcomeRegistered;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -51,6 +54,12 @@ class AuthController extends Controller
         ]);
 
         $token = $user->createToken('auth-token')->plainTextToken;
+
+        try {
+            Mail::to($user->email)->send(new WelcomeRegistered($user));
+        } catch (\Throwable $e) {
+            Log::warning('Welcome email failed', ['error' => $e->getMessage(), 'user_id' => $user->id]);
+        }
 
         return response()->json([
             'message' => 'ثبت‌نام با موفقیت انجام شد',
