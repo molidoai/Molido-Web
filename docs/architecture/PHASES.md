@@ -4,26 +4,25 @@
 
 | Phase | Title |
 |-------|--------|
-| 0–12 | Backend core (Auth, CRM, ERP, AI, Payment, Subscription...) |
+| 0–12 | Backend core |
 | 13 | Deployment docs (VPS + cPanel) |
-| 14 | **Web App — React Command Center** |
+| 14 | React Command Center (base) |
+| 15 | **Web App expansion** — Tasks, Approvals, Payments, Subscriptions UI |
 
-## Frontend features
+## Frontend pages
 
-- Login / Register
-- Dashboard
-- Customers (list + create)
-- Leads / Products lists
-- AI Chat (agents + send)
-- Module Marketplace (activate)
+- Login / Register / Dashboard
+- Customers, Leads, Products
+- AI Chat + Agents
+- Tasks (AI Task Inbox)
+- Approvals (Human Approval)
+- Modules (Marketplace)
+- Payments (initiate mock + list)
+- Subscriptions (plans + subscribe/cancel)
 
-## Stack
+## Optional next
 
-React 18 + Vite + Tailwind + React Router + Axios
-
-## Remaining optional
-
-- Full CRUD UI for all entities
-- Real-time streaming chat
-- Admin Command Center charts
-- Automated E2E tests
+- Real PSP (Zarinpal) adapter
+- Feature Flags admin UI
+- Charts / analytics dashboard
+- E2E tests

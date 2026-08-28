@@ -9,6 +9,10 @@ import Leads from './pages/Leads'
 import Products from './pages/Products'
 import Chat from './pages/Chat'
 import Modules from './pages/Modules'
+import Tasks from './pages/Tasks'
+import Approvals from './pages/Approvals'
+import Payments from './pages/Payments'
+import Subscriptions from './pages/Subscriptions'
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth()
@@ -63,6 +67,10 @@ export default function App() {
             <Route path="products" element={<Products />} />
             <Route path="chat" element={<Chat />} />
             <Route path="modules" element={<Modules />} />
+            <Route path="tasks" element={<Tasks />} />
+            <Route path="approvals" element={<Approvals />} />
+            <Route path="payments" element={<Payments />} />
+            <Route path="subscriptions" element={<Subscriptions />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

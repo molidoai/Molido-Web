@@ -60,4 +60,30 @@ export const productApi = {
   list: (params) => api.get('/erp/products', { params }),
 }
 
+export const taskApi = {
+  list: (params) => api.get('/ai/tasks', { params }),
+  create: (data) => api.post('/ai/tasks', data),
+  get: (id) => api.get(`/ai/tasks/${id}`),
+  updateStatus: (id, data) => api.patch(`/ai/tasks/${id}/status`, data),
+}
+
+export const approvalApi = {
+  list: (params) => api.get('/ai/approvals', { params }),
+  create: (data) => api.post('/ai/approvals', data),
+  review: (id, data) => api.post(`/ai/approvals/${id}/review`, data),
+}
+
+export const paymentApi = {
+  list: (params) => api.get('/payments', { params }),
+  initiate: (data) => api.post('/payments/initiate', data),
+  get: (uuid) => api.get(`/payments/${uuid}`),
+}
+
+export const subscriptionApi = {
+  plans: () => api.get('/subscriptions/plans'),
+  list: () => api.get('/subscriptions'),
+  subscribe: (data) => api.post('/subscriptions/subscribe', data),
+  cancel: (id, data) => api.post(`/subscriptions/${id}/cancel`, data),
+}
+
 export default api

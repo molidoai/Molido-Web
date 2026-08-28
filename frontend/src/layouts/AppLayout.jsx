@@ -7,7 +7,11 @@ const links = [
   { to: '/leads', label: 'سرنخ‌ها' },
   { to: '/products', label: 'محصولات' },
   { to: '/chat', label: 'چت AI' },
+  { to: '/tasks', label: 'تسک‌ها' },
+  { to: '/approvals', label: 'تأییدها' },
   { to: '/modules', label: 'ماژول‌ها' },
+  { to: '/payments', label: 'پرداخت' },
+  { to: '/subscriptions', label: 'اشتراک' },
 ]
 
 export default function AppLayout() {
