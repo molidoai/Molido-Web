@@ -11,6 +11,8 @@ import Dashboard from './pages/Dashboard'
 import Customers from './pages/Customers'
 import Leads from './pages/Leads'
 import Products from './pages/Products'
+import Deals from './pages/Deals'
+import Orders from './pages/Orders'
 import Chat from './pages/Chat'
 import Modules from './pages/Modules'
 import Tasks from './pages/Tasks'
@@ -71,6 +73,8 @@ export default function App() {
             <Route path="customers" element={<Customers />} />
             <Route path="leads" element={<Leads />} />
             <Route path="products" element={<Products />} />
+            <Route path="deals" element={<Deals />} />
+            <Route path="orders" element={<Orders />} />
             <Route path="chat" element={<Chat />} />
             <Route path="modules" element={<Modules />} />
             <Route path="tasks" element={<Tasks />} />

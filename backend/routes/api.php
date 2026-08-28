@@ -84,6 +84,8 @@ Route::prefix('v1')->group(function () {
                 ->middleware('permission:crm.lead.update');
             Route::delete('/{id}', [LeadController::class, 'destroy'])
                 ->middleware('permission:crm.lead.update');
+            Route::post('/{id}/convert', [LeadController::class, 'convert'])
+                ->middleware('permission:crm.lead.update');
         });
 
         // CRM — Deals

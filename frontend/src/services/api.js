@@ -66,10 +66,28 @@ export const moduleApi = {
 
 export const leadApi = {
   list: (params) => api.get('/crm/leads', { params }),
+  create: (data) => api.post('/crm/leads', data),
+  update: (id, data) => api.put(`/crm/leads/${id}`, data),
+  remove: (id) => api.delete(`/crm/leads/${id}`),
+  convert: (id, data) => api.post(`/crm/leads/${id}/convert`, data || {}),
+}
+
+export const dealApi = {
+  list: (params) => api.get('/crm/deals', { params }),
+  create: (data) => api.post('/crm/deals', data),
+  update: (id, data) => api.put(`/crm/deals/${id}`, data),
 }
 
 export const productApi = {
   list: (params) => api.get('/erp/products', { params }),
+  create: (data) => api.post('/erp/products', data),
+  update: (id, data) => api.put(`/erp/products/${id}`, data),
+}
+
+export const orderApi = {
+  list: (params) => api.get('/erp/orders', { params }),
+  create: (data) => api.post('/erp/orders', data),
+  update: (id, data) => api.put(`/erp/orders/${id}`, data),
 }
 
 export const taskApi = {

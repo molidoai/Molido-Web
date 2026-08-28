@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Crm;
 
 use App\Http\Controllers\Controller;
+use App\Models\Deal;
 use App\Models\Lead;
 use Illuminate\Http\Request;
 
@@ -43,7 +44,6 @@ class LeadController extends Controller
             'next_follow_up_at' => 'nullable|date',
         ]);
 
-        // Ensure customer belongs to same org
         if (!empty($validated['customer_id'])) {
             $exists = \App\Models\Customer::where('id', $validated['customer_id'])
                 ->where('organization_id', $user->organization_id)
@@ -111,5 +111,47 @@ class LeadController extends Controller
         $lead->delete();
 
         return response()->json(['message' => 'سرنخ حذف شد']);
+    }
+
+    /**
+     * Convert qualified lead into a deal
+     */
+    public function convert(Request $request, $id)
+    {
+        $user = $request->user();
+        $lead = Lead::where('organization_id', $user->organization_id)->findOrFail($id);
+
+        if ($lead->status === 'converted') {
+            return response()->json(['message' => 'این سرنخ قبلاً تبدیل شده'], 422);
+        }
+
+        if (!$lead->customer_id) {
+            return response()->json(['message' => 'برای تبدیل، سرنخ باید به مشتری متصل باشد'], 422);
+        }
+
+        $validated = $request->validate([
+            'title' => 'nullable|string|max:255',
+            'amount' => 'nullable|numeric|min:0',
+            'stage' => 'nullable|in:prospecting,qualification,proposal,negotiation,won,lost',
+        ]);
+
+        $deal = Deal::create([
+            'organization_id' => $user->organization_id,
+            'customer_id' => $lead->customer_id,
+            'lead_id' => $lead->id,
+            'title' => $validated['title'] ?? $lead->title,
+            'amount' => $validated['amount'] ?? $lead->estimated_value ?? 0,
+            'stage' => $validated['stage'] ?? 'qualification',
+            'assigned_to' => $lead->assigned_to,
+            'currency' => 'IRR',
+        ]);
+
+        $lead->update(['status' => 'converted']);
+
+        return response()->json([
+            'message' => 'سرنخ به معامله تبدیل شد',
+            'deal' => $deal,
+            'lead' => $lead->fresh(),
+        ], 201);
     }
 }
