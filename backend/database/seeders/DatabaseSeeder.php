@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
             AiAgentSeeder::class,
             ModuleSeeder::class,
             PlanSeeder::class,
+            FeatureFlagSeeder::class,
         ]);
     }
 }

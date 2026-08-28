@@ -86,4 +86,11 @@ export const subscriptionApi = {
   cancel: (id, data) => api.post(`/subscriptions/${id}/cancel`, data),
 }
 
+export const featureFlagApi = {
+  list: () => api.get('/feature-flags'),
+  enabled: () => api.get('/feature-flags/enabled'),
+  update: (key, data) => api.put(`/feature-flags/${key}`, data),
+}
+
 export default api
+

@@ -13,6 +13,7 @@ import Tasks from './pages/Tasks'
 import Approvals from './pages/Approvals'
 import Payments from './pages/Payments'
 import Subscriptions from './pages/Subscriptions'
+import FeatureFlags from './pages/FeatureFlags'
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth()
@@ -71,6 +72,7 @@ export default function App() {
             <Route path="approvals" element={<Approvals />} />
             <Route path="payments" element={<Payments />} />
             <Route path="subscriptions" element={<Subscriptions />} />
+            <Route path="feature-flags" element={<FeatureFlags />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

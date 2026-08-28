@@ -14,6 +14,7 @@ use App\Http\Controllers\Knowledge\KnowledgeController;
 use App\Http\Controllers\Marketplace\ModuleController;
 use App\Http\Controllers\Payment\PaymentController;
 use App\Http\Controllers\Subscription\SubscriptionController;
+use App\Http\Controllers\Admin\FeatureFlagController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -121,6 +122,15 @@ Route::prefix('v1')->group(function () {
 
 
 
+
+
+        // Feature Flags
+        Route::prefix("feature-flags")->group(function () {
+            Route::get("/", [FeatureFlagController::class, "index"]);
+            Route::get("/enabled", [FeatureFlagController::class, "enabled"]);
+            Route::get("/check/{key}", [FeatureFlagController::class, "check"]);
+            Route::put("/{key}", [FeatureFlagController::class, "update"]);
+        });
 
         // Subscriptions
         Route::prefix("subscriptions")->group(function () {

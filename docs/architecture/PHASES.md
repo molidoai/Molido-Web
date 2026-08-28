@@ -7,18 +7,28 @@
 | 0–12 | Backend core |
 | 13 | Deployment docs |
 | 14–15 | React Command Center |
-| **16** | **Zarinpal Payment Provider** (real PSP adapter) |
+| 16 | Zarinpal Payment Provider |
+| **17** | **Feature Flags API + Admin UI** |
 
-## Payment providers
+## Feature Flags
 
-- `mock` — development (default)
-- `zarinpal` — production-ready Iran gateway (sandbox + live)
+Keys (seeded):
+- CHATBOT_ENABLED
+- AI_WORKFORCE_ENABLED
+- CRM_ENABLED / ERP_ENABLED
+- MARKETPLACE_ENABLED / PAYMENT_ENABLED / SUBSCRIPTION_ENABLED
+- VOICE_ENABLED / ADVANCED_RAG_ENABLED (off by default)
 
-See: [docs/payments/PAYMENT_SETUP.md](../payments/PAYMENT_SETUP.md)
+API:
+- GET  /api/v1/feature-flags
+- GET  /api/v1/feature-flags/enabled
+- PUT  /api/v1/feature-flags/{key}
+- GET  /api/v1/feature-flags/check/{key}
+
+UI: `/feature-flags` in Command Center
 
 ## Optional next
 
-- Feature Flags admin API/UI
-- IdPay / other PSP adapters
-- Analytics charts dashboard
-- Automated tests
+- Analytics dashboard charts
+- Automated test suite
+- Audit log UI
