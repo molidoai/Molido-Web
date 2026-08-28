@@ -86,6 +86,14 @@ export const subscriptionApi = {
   cancel: (id, data) => api.post(`/subscriptions/${id}/cancel`, data),
 }
 
+export const auditApi = {
+  list: (params) => api.get('/audit-logs', { params }),
+}
+
+export const dashboardApi = {
+  stats: () => api.get('/dashboard/stats'),
+}
+
 export const featureFlagApi = {
   list: () => api.get('/feature-flags'),
   enabled: () => api.get('/feature-flags/enabled'),

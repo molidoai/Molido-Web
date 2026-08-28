@@ -13,6 +13,7 @@ const links = [
   { to: '/payments', label: 'پرداخت' },
   { to: '/subscriptions', label: 'اشتراک' },
   { to: '/feature-flags', label: 'فلگ‌ها' },
+  { to: '/audit', label: 'Audit' },
 ]
 
 export default function AppLayout() {

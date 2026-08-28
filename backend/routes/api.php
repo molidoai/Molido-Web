@@ -15,6 +15,8 @@ use App\Http\Controllers\Marketplace\ModuleController;
 use App\Http\Controllers\Payment\PaymentController;
 use App\Http\Controllers\Subscription\SubscriptionController;
 use App\Http\Controllers\Admin\FeatureFlagController;
+use App\Http\Controllers\Admin\AuditController;
+use App\Http\Controllers\Admin\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -123,6 +125,13 @@ Route::prefix('v1')->group(function () {
 
 
 
+
+
+        // Dashboard stats
+        Route::get("/dashboard/stats", [DashboardController::class, "stats"]);
+
+        // Audit logs
+        Route::get("/audit-logs", [AuditController::class, "index"]);
 
         // Feature Flags
         Route::prefix("feature-flags")->group(function () {

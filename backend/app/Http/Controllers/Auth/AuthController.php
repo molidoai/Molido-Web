@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
+use App\Services\AuditService;
 
 class AuthController extends Controller
 {
@@ -98,6 +99,13 @@ class AuthController extends Controller
         $user->update(['last_login_at' => now()]);
 
         $token = $user->createToken('auth-token')->plainTextToken;
+
+        AuditService::log('auth.login', [
+            'organization_id' => $user->organization_id,
+            'actor_type' => 'user',
+            'actor_id' => $user->id,
+            'result' => 'success',
+        ]);
 
         return response()->json([
             'message' => 'ورود موفقیت‌آمیز',
