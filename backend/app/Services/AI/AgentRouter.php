@@ -67,7 +67,7 @@ class AgentRouter
     /**
      * Build system prompt for an agent.
      */
-    public function buildSystemPrompt(AiAgent $agent): string
+    public function buildSystemPrompt(object $agent): string
     {
         $base = $agent->system_instructions
             ?? "You are {$agent->name}, a helpful AI assistant specialized in {$agent->role}.";
