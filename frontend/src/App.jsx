@@ -2,6 +2,9 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import AppLayout from './layouts/AppLayout'
 import Login from './pages/Login'
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
+import Settings from './pages/Settings'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import Customers from './pages/Customers'
@@ -74,6 +77,7 @@ export default function App() {
             <Route path="payments" element={<Payments />} />
             <Route path="subscriptions" element={<Subscriptions />} />
             <Route path="feature-flags" element={<FeatureFlags />} />
+            <Route path="settings" element={<Settings />} />
             <Route path="audit" element={<Audit />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />

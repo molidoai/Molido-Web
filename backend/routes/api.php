@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\PasswordResetController;
+use App\Http\Controllers\HealthController;
+use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Crm\LeadController;
 use App\Http\Controllers\Crm\DealController;
@@ -35,7 +38,12 @@ Route::prefix('v1')->group(function () {
     Route::prefix('auth')->group(function () {
         Route::post('/register', [AuthController::class, 'register']);
         Route::post('/login', [AuthController::class, 'login']);
+        Route::post('/forgot-password', [PasswordResetController::class, 'forgot']);
+        Route::post('/reset-password', [PasswordResetController::class, 'reset']);
     });
+
+    // Public health
+    Route::get('/health', HealthController::class);
 
     // Public payment callback (providers + mock)
     Route::get('/payments/mock-callback', [PaymentController::class, 'mockCallback']);
@@ -129,6 +137,8 @@ Route::prefix('v1')->group(function () {
 
 
         // Dashboard stats
+        Route::get("/organization", [OrganizationController::class, "show"]);
+        Route::put("/organization", [OrganizationController::class, "update"]);
         Route::get("/dashboard/stats", [DashboardController::class, "stats"]);
 
         // Audit logs

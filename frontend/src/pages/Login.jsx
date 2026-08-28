@@ -46,6 +46,9 @@ export default function Login() {
             {loading ? '...' : 'ورود'}
           </button>
         </form>
+      <p className="text-center text-sm text-slate-400 mt-4">
+        <a href="/forgot-password" className="text-cyan-400">فراموشی رمز</a>
+      </p>
 
         <p className="text-sm text-slate-500 mt-6 text-center">
           حساب ندارید؟{' '}

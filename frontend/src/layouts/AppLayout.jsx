@@ -14,6 +14,7 @@ const links = [
   { to: '/subscriptions', label: 'اشتراک' },
   { to: '/feature-flags', label: 'فلگ‌ها' },
   { to: '/audit', label: 'Audit' },
+  { to: '/settings', label: 'تنظیمات' },
 ]
 
 export default function AppLayout() {
