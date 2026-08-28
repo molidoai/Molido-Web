@@ -16,9 +16,8 @@ class PaymentService
         $name = $name ?: env('PAYMENT_PROVIDER', 'mock');
 
         return match ($name) {
+            'zarinpal' => new ZarinpalPaymentProvider(),
             'mock' => new MockPaymentProvider(),
-            // 'zarinpal' => new ZarinpalProvider(),
-            // 'idpay' => new IdPayProvider(),
             default => new MockPaymentProvider(),
         };
     }

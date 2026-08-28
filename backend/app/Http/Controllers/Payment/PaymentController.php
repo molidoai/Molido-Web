@@ -125,4 +125,32 @@ class PaymentController extends Controller
 
         return response()->json($tx);
     }
+
+    /**
+     * Zarinpal return/callback (browser redirect)
+     * Query: uuid, Authority, Status
+     */
+    public function zarinpalCallback(Request $request)
+    {
+        $uuid = $request->get('uuid');
+        if (!$uuid) {
+            return response()->json(['message' => 'Missing uuid'], 400);
+        }
+
+        $service = app(PaymentService::class);
+        $result = $service->verifyAndActivate($uuid, $request->all());
+
+        // Optional: redirect to frontend success/fail page
+        $frontend = rtrim(env('FRONTEND_URL', env('APP_URL', '')), '/');
+        if ($frontend && $request->expectsJson() === false && !$request->ajax()) {
+            $q = http_build_query([
+                'payment' => $result['success'] ? 'success' : 'failed',
+                'uuid' => $uuid,
+            ]);
+            return redirect($frontend . '/payments?' . $q);
+        }
+
+        return response()->json($result, $result['success'] ? 200 : 422);
+    }
+
 }

@@ -35,6 +35,7 @@ Route::prefix('v1')->group(function () {
 
     // Public payment callback (providers + mock)
     Route::get('/payments/mock-callback', [PaymentController::class, 'mockCallback']);
+    Route::get('/payments/zarinpal-callback', [PaymentController::class, 'zarinpalCallback']);
     Route::post('/payments/verify', [PaymentController::class, 'verify']);
 
     // Protected routes

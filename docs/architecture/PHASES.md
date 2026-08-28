@@ -5,24 +5,20 @@
 | Phase | Title |
 |-------|--------|
 | 0–12 | Backend core |
-| 13 | Deployment docs (VPS + cPanel) |
-| 14 | React Command Center (base) |
-| 15 | **Web App expansion** — Tasks, Approvals, Payments, Subscriptions UI |
+| 13 | Deployment docs |
+| 14–15 | React Command Center |
+| **16** | **Zarinpal Payment Provider** (real PSP adapter) |
 
-## Frontend pages
+## Payment providers
 
-- Login / Register / Dashboard
-- Customers, Leads, Products
-- AI Chat + Agents
-- Tasks (AI Task Inbox)
-- Approvals (Human Approval)
-- Modules (Marketplace)
-- Payments (initiate mock + list)
-- Subscriptions (plans + subscribe/cancel)
+- `mock` — development (default)
+- `zarinpal` — production-ready Iran gateway (sandbox + live)
+
+See: [docs/payments/PAYMENT_SETUP.md](../payments/PAYMENT_SETUP.md)
 
 ## Optional next
 
-- Real PSP (Zarinpal) adapter
-- Feature Flags admin UI
-- Charts / analytics dashboard
-- E2E tests
+- Feature Flags admin API/UI
+- IdPay / other PSP adapters
+- Analytics charts dashboard
+- Automated tests
