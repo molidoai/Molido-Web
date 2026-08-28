@@ -220,6 +220,11 @@ Route::prefix('v1')->group(function () {
         Route::prefix("ai/agents")->group(function () {
             Route::get("/", [AgentController::class, "index"])
                 ->middleware("permission:ai.chat.use");
+            Route::get("/templates", [AgentController::class, "templates"])
+                ->middleware("permission:ai.chat.use");
+            Route::post("/", [AgentController::class, "store"]);
+            Route::put("/{id}", [AgentController::class, "update"]);
+            Route::delete("/{id}", [AgentController::class, "destroy"]);
             Route::get("/{slug}", [AgentController::class, "show"])
                 ->middleware("permission:ai.chat.use");
         });

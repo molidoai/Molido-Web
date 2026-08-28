@@ -7,6 +7,7 @@ const links = [
   { to: '/leads', label: 'سرنخ‌ها' },
   { to: '/products', label: 'محصولات' },
   { to: '/chat', label: 'چت AI' },
+  { to: '/workforce', label: 'کارمندان AI' },
   { to: '/tasks', label: 'تسک‌ها' },
   { to: '/approvals', label: 'تأییدها' },
   { to: '/modules', label: 'ماژول‌ها' },

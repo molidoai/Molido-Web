@@ -52,6 +52,10 @@ export const aiApi = {
   messages: (id) => api.get(`/ai/conversations/${id}/messages`),
   send: (id, data) => api.post(`/ai/conversations/${id}/send`, data),
   agents: () => api.get('/ai/agents'),
+  agentTemplates: () => api.get('/ai/agents/templates'),
+  createAgent: (data) => api.post('/ai/agents', data),
+  updateAgent: (id, data) => api.put(`/ai/agents/${id}`, data),
+  deleteAgent: (id) => api.delete(`/ai/agents/${id}`),
 }
 
 export const moduleApi = {
