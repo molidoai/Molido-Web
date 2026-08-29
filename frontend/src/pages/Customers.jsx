@@ -20,6 +20,20 @@ export default function Customers() {
     load()
   }, [])
 
+  const exportCsv = async () => {
+    try {
+      const res = await customerApi.exportCsv()
+      const url = window.URL.createObjectURL(new Blob([res.data]))
+      const a = document.createElement('a')
+      a.href = url
+      a.download = 'customers.csv'
+      a.click()
+      window.URL.revokeObjectURL(url)
+    } catch {
+      setError('خروجی CSV ناموفق')
+    }
+  }
+
   const create = async (e) => {
     e.preventDefault()
     setError('')
@@ -34,7 +48,10 @@ export default function Customers() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">مشتریان</h1>
+      <div className="flex justify-between items-center mb-6 gap-3">
+        <h1 className="text-2xl font-bold">مشتریان</h1>
+        <button type="button" className="btn btn-ghost text-xs" onClick={exportCsv}>خروجی CSV</button>
+      </div>
 
       <form onSubmit={create} className="card mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
         <input className="input" placeholder="نام" value={form.first_name} onChange={(e) => setForm({ ...form, first_name: e.target.value })} required />

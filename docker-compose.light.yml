@@ -1,0 +1,39 @@
+# Optional lightweight stack for dev / small VPS (3 vCPU / 6GB).
+# Prefer bare metal PHP+Nginx+MySQL on production Iran VPS if Docker RAM is tight.
+# Usage: docker compose -f docker-compose.light.yml up -d
+
+services:
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: molido
+      MYSQL_USER: molido
+      MYSQL_PASSWORD: change_me
+      MYSQL_ROOT_PASSWORD: change_me_root
+    command:
+      - --innodb-buffer-pool-size=512M
+      - --max-connections=50
+    volumes:
+      - molido_mysql:/var/lib/mysql
+    ports:
+      - "127.0.0.1:3306:3306"
+    mem_limit: 1536m
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --maxmemory 64mb --maxmemory-policy allkeys-lru
+    ports:
+      - "127.0.0.1:6379:6379"
+    mem_limit: 128m
+    profiles:
+      - with-redis
+
+volumes:
+  molido_mysql:

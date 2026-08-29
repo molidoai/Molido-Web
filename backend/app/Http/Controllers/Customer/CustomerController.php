@@ -141,4 +141,43 @@ class CustomerController extends Controller
             'message' => 'مشتری حذف شد',
         ]);
     }
+
+    /**
+     * Export customers as CSV (stream)
+     */
+    public function export(Request $request)
+    {
+        $user = $request->user();
+        $rows = Customer::where('organization_id', $user->organization_id)
+            ->orderBy('id')
+            ->get(['id', 'first_name', 'last_name', 'email', 'phone', 'status', 'source', 'created_at']);
+
+        $filename = 'customers-' . now()->format('Ymd-His') . '.csv';
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ];
+
+        $callback = function () use ($rows) {
+            $out = fopen('php://output', 'w');
+            fprintf($out, chr(0xEF) . chr(0xBB) . chr(0xBF)); // UTF-8 BOM for Excel
+            fputcsv($out, ['id', 'first_name', 'last_name', 'email', 'phone', 'status', 'source', 'created_at']);
+            foreach ($rows as $r) {
+                fputcsv($out, [
+                    $r->id,
+                    $r->first_name,
+                    $r->last_name,
+                    $r->email,
+                    $r->phone,
+                    $r->status,
+                    $r->source,
+                    optional($r->created_at)->toDateTimeString(),
+                ]);
+            }
+            fclose($out);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
 }

@@ -44,6 +44,7 @@ export const customerApi = {
   list: (params) => api.get('/customers', { params }),
   create: (data) => api.post('/customers', data),
   get: (id) => api.get(`/customers/${id}`),
+  exportCsv: () => api.get('/customers/export', { responseType: 'blob' }),
 }
 
 export const aiApi = {

@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Team\InviteController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\HealthController;
+use App\Http\Controllers\SystemStatusController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Crm\LeadController;
@@ -53,6 +54,7 @@ Route::prefix('v1')->group(function () {
 
     // Public health
     Route::get('/health', HealthController::class);
+    Route::get('/system/status', SystemStatusController::class);
 
     // Public payment callback (providers + mock)
     Route::get('/payments/mock-callback', [PaymentController::class, 'mockCallback']);
@@ -70,6 +72,8 @@ Route::prefix('v1')->group(function () {
         // Customer Center (central identity)
         Route::prefix('customers')->group(function () {
             Route::get('/', [CustomerController::class, 'index'])
+                ->middleware('permission:crm.customer.read');
+            Route::get('/export', [CustomerController::class, 'export'])
                 ->middleware('permission:crm.customer.read');
             Route::post('/', [CustomerController::class, 'store'])
                 ->middleware('permission:crm.customer.create');
