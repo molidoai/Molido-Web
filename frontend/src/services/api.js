@@ -56,6 +56,9 @@ export const aiApi = {
   createAgent: (data) => api.post('/ai/agents', data),
   updateAgent: (id, data) => api.put(`/ai/agents/${id}`, data),
   deleteAgent: (id) => api.delete(`/ai/agents/${id}`),
+  listTeams: () => api.get('/ai/teams'),
+  createTeam: (data) => api.post('/ai/teams', data),
+  deleteTeam: (id) => api.delete(`/ai/teams/${id}`),
 }
 
 export const moduleApi = {

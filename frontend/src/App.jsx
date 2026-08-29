@@ -6,6 +6,7 @@ import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import Settings from './pages/Settings'
 import Workforce from './pages/Workforce'
+import AiTeams from './pages/AiTeams'
 import Team from './pages/Team'
 import AcceptInvite from './pages/AcceptInvite'
 import Notifications from './pages/Notifications'
@@ -87,6 +88,7 @@ export default function App() {
             <Route path="feature-flags" element={<FeatureFlags />} />
             <Route path="settings" element={<Settings />} />
             <Route path="workforce" element={<Workforce />} />
+            <Route path="ai-teams" element={<AiTeams />} />
             <Route path="team" element={<Team />} />
             <Route path="notifications" element={<Notifications />} />
             <Route path="audit" element={<Audit />} />

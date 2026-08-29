@@ -10,6 +10,7 @@ const links = [
   { to: '/orders', label: 'سفارش‌ها' },
   { to: '/chat', label: 'چت AI' },
   { to: '/workforce', label: 'کارمندان AI' },
+  { to: '/ai-teams', label: 'تیم‌های AI' },
   { to: '/tasks', label: 'تسک‌ها' },
   { to: '/approvals', label: 'تأییدها' },
   { to: '/modules', label: 'ماژول‌ها' },

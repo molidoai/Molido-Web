@@ -13,6 +13,7 @@ use App\Http\Controllers\Erp\ProductController;
 use App\Http\Controllers\Erp\OrderController;
 use App\Http\Controllers\AI\ChatController;
 use App\Http\Controllers\AI\AgentController;
+use App\Http\Controllers\AI\TeamController;
 use App\Http\Controllers\AI\TaskController;
 use App\Http\Controllers\AI\ApprovalController;
 use App\Http\Controllers\Knowledge\KnowledgeController;
@@ -234,6 +235,12 @@ Route::prefix('v1')->group(function () {
         });
 
         // AI Agents
+        Route::prefix("ai/teams")->group(function () {
+            Route::get("/", [TeamController::class, "index"]);
+            Route::post("/", [TeamController::class, "store"]);
+            Route::delete("/{id}", [TeamController::class, "destroy"]);
+        });
+
         Route::prefix("ai/agents")->group(function () {
             Route::get("/", [AgentController::class, "index"])
                 ->middleware("permission:ai.chat.use");
