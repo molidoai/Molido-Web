@@ -130,5 +130,20 @@ export const featureFlagApi = {
   update: (key, data) => api.put(`/feature-flags/${key}`, data),
 }
 
+export const teamApi = {
+  list: () => api.get('/team'),
+  invite: (data) => api.post('/team/invites', data),
+  revoke: (id) => api.post(`/team/invites/${id}/revoke`),
+  preview: (token) => api.get('/invites/preview', { params: { token } }),
+  accept: (data) => api.post('/invites/accept', data),
+}
+
+export const notificationApi = {
+  list: () => api.get('/notifications'),
+  read: (id) => api.post(`/notifications/${id}/read`),
+  readAll: () => api.post('/notifications/read-all'),
+}
+
 export default api
+
 

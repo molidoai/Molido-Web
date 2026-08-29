@@ -17,6 +17,8 @@ const links = [
   { to: '/subscriptions', label: 'اشتراک' },
   { to: '/feature-flags', label: 'فلگ‌ها' },
   { to: '/audit', label: 'Audit' },
+  { to: '/team', label: 'تیم' },
+  { to: '/notifications', label: 'اعلان‌ها' },
   { to: '/settings', label: 'تنظیمات' },
 ]
 

@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordResetController;
+use App\Http\Controllers\Team\InviteController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\HealthController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\Customer\CustomerController;
@@ -41,6 +43,11 @@ Route::prefix('v1')->group(function () {
         Route::post('/forgot-password', [PasswordResetController::class, 'forgot']);
         Route::post('/reset-password', [PasswordResetController::class, 'reset']);
     });
+
+    // Public invite accept
+    Route::get('/invites/preview', [InviteController::class, 'preview']);
+    Route::post('/invites/accept', [InviteController::class, 'accept']);
+
 
     // Public health
     Route::get('/health', HealthController::class);
@@ -141,6 +148,14 @@ Route::prefix('v1')->group(function () {
         // Dashboard stats
         Route::get("/organization", [OrganizationController::class, "show"]);
         Route::put("/organization", [OrganizationController::class, "update"]);
+
+        Route::get("/team", [InviteController::class, "index"]);
+        Route::post("/team/invites", [InviteController::class, "store"]);
+        Route::post("/team/invites/{id}/revoke", [InviteController::class, "revoke"]);
+
+        Route::get("/notifications", [NotificationController::class, "index"]);
+        Route::post("/notifications/{id}/read", [NotificationController::class, "markRead"]);
+        Route::post("/notifications/read-all", [NotificationController::class, "markAllRead"]);
         Route::get("/dashboard/stats", [DashboardController::class, "stats"]);
 
         // Audit logs

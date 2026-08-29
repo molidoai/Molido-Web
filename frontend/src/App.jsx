@@ -6,6 +6,9 @@ import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import Settings from './pages/Settings'
 import Workforce from './pages/Workforce'
+import Team from './pages/Team'
+import AcceptInvite from './pages/AcceptInvite'
+import Notifications from './pages/Notifications'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import Customers from './pages/Customers'
@@ -84,6 +87,8 @@ export default function App() {
             <Route path="feature-flags" element={<FeatureFlags />} />
             <Route path="settings" element={<Settings />} />
             <Route path="workforce" element={<Workforce />} />
+            <Route path="team" element={<Team />} />
+            <Route path="notifications" element={<Notifications />} />
             <Route path="audit" element={<Audit />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
