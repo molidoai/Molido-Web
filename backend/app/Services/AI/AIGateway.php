@@ -46,6 +46,18 @@ class AIGateway
                 'success' => false,
                 'error' => $safetyResult['reason'] ?? 'Blocked by safety gateway',
                 'code' => 'safety_blocked',
+                'requires_approval' => $safetyResult['requires_approval'] ?? false,
+            ];
+        }
+
+        $budget = app(OrgBudgetService::class)->assertCanSpend($organizationId);
+        if (!$budget['allowed']) {
+            return [
+                'success' => false,
+                'error' => $budget['reason'] ?? 'Budget exceeded',
+                'code' => $budget['code'] ?? 'budget_exceeded',
+                'used' => $budget['used'] ?? null,
+                'limit' => $budget['limit'] ?? null,
             ];
         }
 

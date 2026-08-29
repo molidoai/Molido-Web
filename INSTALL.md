@@ -75,3 +75,26 @@ For production:
 npm run build
 # serve dist/ or deploy behind same domain
 ```
+
+## Unified CORE + AI Factory
+
+See `docs/architecture/UNIFIED_CORE_FACTORY.md`.
+
+After migrate, factory tables and AI teams are included.
+
+```bash
+php artisan migrate --seed
+```
+
+Optional AI budget in `.env`:
+
+```env
+AI_ORG_MONTHLY_TOKEN_BUDGET=500000
+```
+
+## Before giving VPS access
+
+1. Push latest `main` to GitHub
+2. Have domain DNS ready (`molido.ir` → server IP)
+3. Prepare SMTP app password and optional Zarinpal merchant
+4. On server: only **read-only audit** first (Phase 0)

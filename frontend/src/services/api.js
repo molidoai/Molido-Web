@@ -147,6 +147,12 @@ export const notificationApi = {
   readAll: () => api.post('/notifications/read-all'),
 }
 
+export const knowledgeApi = {
+  list: (params) => api.get('/knowledge', { params }),
+  create: (data) => api.post('/knowledge', data),
+  search: (q) => api.get('/knowledge/search', { params: { q } }),
+}
+
 export const factoryApi = {
   templates: () => api.get('/factory/projects/templates'),
   list: (params) => api.get('/factory/projects', { params }),

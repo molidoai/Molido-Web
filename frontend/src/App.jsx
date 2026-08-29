@@ -8,6 +8,7 @@ import Settings from './pages/Settings'
 import Workforce from './pages/Workforce'
 import AiTeams from './pages/AiTeams'
 import Factory from './pages/Factory'
+import Knowledge from './pages/Knowledge'
 import Team from './pages/Team'
 import AcceptInvite from './pages/AcceptInvite'
 import Notifications from './pages/Notifications'
@@ -91,6 +92,7 @@ export default function App() {
             <Route path="workforce" element={<Workforce />} />
             <Route path="ai-teams" element={<AiTeams />} />
             <Route path="factory" element={<Factory />} />
+            <Route path="knowledge" element={<Knowledge />} />
             <Route path="team" element={<Team />} />
             <Route path="notifications" element={<Notifications />} />
             <Route path="audit" element={<Audit />} />
