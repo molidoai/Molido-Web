@@ -147,6 +147,16 @@ export const notificationApi = {
   readAll: () => api.post('/notifications/read-all'),
 }
 
+export const factoryApi = {
+  templates: () => api.get('/factory/projects/templates'),
+  list: (params) => api.get('/factory/projects', { params }),
+  create: (data) => api.post('/factory/projects', data),
+  get: (id) => api.get(`/factory/projects/${id}`),
+  update: (id, data) => api.put(`/factory/projects/${id}`, data),
+  remove: (id) => api.delete(`/factory/projects/${id}`),
+}
+
 export default api
+
 
 

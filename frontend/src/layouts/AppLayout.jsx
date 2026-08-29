@@ -11,6 +11,7 @@ const links = [
   { to: '/chat', label: 'چت AI' },
   { to: '/workforce', label: 'کارمندان AI' },
   { to: '/ai-teams', label: 'تیم‌های AI' },
+  { to: '/factory', label: 'AI Factory' },
   { to: '/tasks', label: 'تسک‌ها' },
   { to: '/approvals', label: 'تأییدها' },
   { to: '/modules', label: 'ماژول‌ها' },

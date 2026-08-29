@@ -1,6 +1,6 @@
 # MOLIDO CORE
 
-**Lightweight AI-Native Business Operating Platform**
+**Lightweight AI-Native Business Operating Platform + embedded AI Factory**
 
 Version: **1.0.0-alpha** (Phases 0–12 complete)
 
@@ -24,6 +24,7 @@ MOLIDO is a lightweight, secure, modular AI-native business platform:
 - Subscriptions & Trials
 - Multi-tenant foundation (`organization_id`)
 - cPanel + VPS ready
+- **AI Factory** (inside CORE): project templates, gateway, agents/teams — see `docs/architecture/UNIFIED_CORE_FACTORY.md`
 
 ---
 
