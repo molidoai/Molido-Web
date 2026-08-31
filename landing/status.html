@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>وضعیت سامانه — MOLIDO</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#07070c;color:#eef4ff;font-family:Vazirmatn,Tahoma,sans-serif}
+nav{padding:16px 20px;border-bottom:1px solid #1e293b;display:flex;gap:10px;align-items:center}
+.logo{font-family:Orbitron,sans-serif;color:#00e5ff;letter-spacing:3px;margin-left:auto}
+a{color:#00e5ff;text-decoration:none}
+.wrap{max-width:640px;margin:0 auto;padding:28px 16px}
+.ok{color:#34d399}.bad{color:#f87171}
+pre{background:#0b1220;border:1px solid #1e293b;border-radius:12px;padding:14px;overflow:auto;white-space:pre-wrap}
+</style>
+</head>
+<body>
+<nav><span class="logo">MOLIDO</span><a href="/">سایت</a></nav>
+<div class="wrap">
+<h1>وضعیت API</h1>
+<p id="s">در حال بررسی…</p>
+<pre id="j"></pre>
+</div>
+<script>
+(async()=>{
+  const s=document.getElementById('s');
+  const j=document.getElementById('j');
+  try{
+    const r=await fetch('/api/v1/health',{headers:{Accept:'application/json'}});
+    const t=await r.text();
+    j.textContent=t;
+    s.className=r.ok?'ok':'bad';
+    s.textContent=r.ok?'سالم':'خطا '+r.status;
+  }catch(e){
+    s.className='bad';
+    s.textContent='قطع';
+    j.textContent=e.message;
+  }
+})();
+</script>
+</body>
+</html>

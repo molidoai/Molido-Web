@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>سفارش‌ها — MOLIDO</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#07070c;color:#eef4ff;font-family:Vazirmatn,Tahoma,sans-serif}
+nav{display:flex;gap:10px;align-items:center;padding:16px 20px;border-bottom:1px solid #1e293b}
+.logo{font-family:Orbitron,sans-serif;letter-spacing:3px;margin-left:auto;color:#00e5ff}
+a,button{color:#042f2e;background:#22d3ee;border:0;border-radius:10px;padding:8px 12px;text-decoration:none;font-weight:700;font-family:inherit;cursor:pointer}
+a.g{background:transparent;color:#e2e8f0;border:1px solid #334155}
+.wrap{max-width:900px;margin:0 auto;padding:20px}
+.err{color:#f87171;min-height:20px}
+table{width:100%;border-collapse:collapse}
+th,td{border-bottom:1px solid #1e293b;padding:10px 8px;text-align:right}
+th{color:#94a3b8}
+</style>
+</head>
+<body>
+<nav>
+  <span class="logo">MOLIDO</span>
+  <a class="g" href="/shop.html">فروش</a>
+  <a class="g" href="/panel.html">پنل</a>
+</nav>
+<div class="wrap">
+  <p class="err" id="err"></p>
+  <table><thead><tr><th>شماره</th><th>وضعیت</th><th>مبلغ</th><th>یادداشت</th></tr></thead><tbody id="tb"></tbody></table>
+</div>
+<script>
+const err=document.getElementById('err');
+const token=localStorage.getItem('molido_token');
+if(!token) location.href='/enter.html';
+(async()=>{
+  try{
+    let r=await fetch('/api/v1/crm-erp/summary',{headers:{Accept:'application/json',Authorization:'Bearer '+token}});
+    let j=await r.json().catch(()=>({}));
+    if(!r.ok) throw new Error(j.message||r.status);
+    const list=j.orders_list||j.orders||[];
+    const tb=document.getElementById('tb');
+    if(!list.length){tb.innerHTML='<tr><td colspan="4">سفارشی نیست</td></tr>';return}
+    list.forEach(o=>{
+      const tr=document.createElement('tr');
+      [o.order_number||o.id,o.status,o.total||o.amount,o.notes||''].forEach(c=>{
+        const td=document.createElement('td'); td.textContent=c??''; tr.appendChild(td);
+      });
+      tb.appendChild(tr);
+    });
+  }catch(e){err.textContent=e.message}
+})();
+</script>
+</body>
+</html>

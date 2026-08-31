@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="theme-color" content="#07070c"/>
+<title>مرکز فرمان — MOLIDO</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Vazirmatn:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07070c;--cyan:#00e5ff;--purple:#a78bfa;--white:#eef4ff;--muted:#94a3b8;--card:#0b1220;--line:#1e293b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:
+radial-gradient(800px 300px at 100% 0,rgba(0,229,255,.1),transparent 50%),
+var(--bg);color:var(--white);font-family:Vazirmatn,Tahoma,sans-serif}
+nav{display:flex;gap:10px;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(7,7,12,.92);backdrop-filter:blur(12px);z-index:5}
+.logo{font-family:Orbitron,sans-serif;letter-spacing:3px;background:linear-gradient(90deg,#fff,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-left:auto}
+#who{color:var(--muted);font-size:13px}
+a,button{background:linear-gradient(135deg,var(--cyan),#00b4d8);color:#042f2e;border:0;border-radius:10px;padding:8px 12px;text-decoration:none;cursor:pointer;font-family:inherit;font-weight:700}
+button.ghost,a.ghost{background:transparent;color:#e2e8f0;border:1px solid #334155}
+.wrap{padding:20px;max-width:1100px;margin:0 auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+.card b{display:block;font-size:26px;margin-top:6px;color:var(--cyan)}
+h3{margin:18px 0 10px;font-size:16px}
+.forms{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:18px}
+.forms input{width:100%;margin:6px 0;padding:10px;border-radius:10px;border:1px solid #334155;background:#070b14;color:#fff;font-family:inherit}
+table{width:100%;border-collapse:collapse;margin-bottom:24px}
+th,td{border-bottom:1px solid var(--line);padding:10px 8px;text-align:right;font-size:14px}
+th{color:var(--muted);font-weight:500}
+.err{color:#f87171;min-height:20px;margin:8px 0}
+.empty{color:var(--muted);padding:12px 0}
+</style>
+</head>
+<body>
+<nav>
+  <span class="logo">MOLIDO</span>
+  <span id="who"></span>
+  <a class="ghost" href="/">سایت</a>
+  <a class="ghost" href="/workforce.html">کارکنان</a>
+  <a class="ghost" href="/chat.html">چت</a>
+  <a class="ghost" href="/orders.html">سفارش</a>
+  <a class="ghost" href="/enter.html">ورود</a>
+  <button type="button" id="out">خروج</button>
+</nav>
+<div class="wrap">
+  <p class="err" id="err"></p>
+  <div class="grid" id="grid"></div>
+  <div class="forms">
+    <div class="card">
+      <h3>محصول جدید</h3>
+      <input id="n" placeholder="نام محصول">
+      <input id="s" placeholder="SKU">
+      <input id="p" placeholder="قیمت" type="number">
+      <button type="button" id="addP">ثبت محصول</button>
+    </div>
+    <div class="card">
+      <h3>مشتری جدید</h3>
+      <input id="cn" placeholder="نام مشتری">
+      <input id="ce" placeholder="ایمیل">
+      <input id="cp" placeholder="موبایل">
+      <button type="button" id="addC">ثبت مشتری</button>
+    </div>
+  </div>
+  <h3>کارکنان مجازی</h3>
+  <table id="agents"><thead><tr><th>نام</th><th>نقش</th><th>وضعیت</th></tr></thead><tbody></tbody></table>
+  <h3>محصولات</h3>
+  <table id="products"><thead><tr><th>نام</th><th>SKU</th><th>قیمت</th></tr></thead><tbody></tbody></table>
+</div>
+<script>
+const token=localStorage.getItem('molido_token');
+const err=document.getElementById('err');
+function row(tableId, cols){
+  const tr=document.createElement('tr');
+  cols.forEach(c=>{const td=document.createElement('td'); td.textContent=c??''; tr.appendChild(td)});
+  document.querySelector('#'+tableId+' tbody').appendChild(tr);
+}
+async function api(path,opt){
+  const r=await fetch('/api/v1'+path,Object.assign({
+    headers:{Accept:'application/json','Content-Type':'application/json',Authorization:'Bearer '+token}
+  },opt||{}));
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok) throw new Error(j.message||path);
+  return j;
+}
+document.getElementById('out').onclick=()=>{localStorage.removeItem('molido_token');location.href='/enter.html'};
+(async()=>{
+  if(!token){location.href='/enter.html';return}
+  try{
+    const me=await api('/auth/me');
+    const u=me.user||me;
+    document.getElementById('who').textContent=u.email||'';
+    const s=await api('/crm-erp/summary');
+    const cards=[['مشتریان',s.customers],['معاملات',s.deals],['سفارش‌ها',s.orders],['محصولات',s.products]];
+    document.getElementById('grid').innerHTML=cards.map(c=>'<div class="card">'+c[0]+'<b>'+(c[1]??0)+'</b></div>').join('');
+    const agents=s.agents_list||[];
+    if(!agents.length) row('agents',['کارمندی ثبت نشده','-','-']);
+    agents.forEach(a=>row('agents',[a.name,a.role,a.status]));
+    const products=s.products_list||[];
+    if(!products.length) row('products',['محصولی نیست','-','-']);
+    products.forEach(x=>row('products',[x.name,x.sku,x.price]));
+  }catch(e){err.textContent=e.message}
+})();
+document.getElementById('addP').onclick=async()=>{
+  try{
+    await api('/products',{method:'POST',body:JSON.stringify({
+      name:document.getElementById('n').value,
+      sku:document.getElementById('s').value,
+      price:Number(document.getElementById('p').value||0),
+      currency:'IRR'
+    })});
+    location.reload();
+  }catch(e){err.textContent=e.message}
+};
+document.getElementById('addC').onclick=async()=>{
+  try{
+    await api('/customers',{method:'POST',body:JSON.stringify({
+      first_name:document.getElementById('cn').value,
+      email:document.getElementById('ce').value,
+      phone:document.getElementById('cp').value
+    })});
+    location.reload();
+  }catch(e){err.textContent=e.message}
+};
+</script>
+</body>
+</html>

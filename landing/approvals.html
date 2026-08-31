@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>تأییدهای انسانی — MOLIDO</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#07070c;color:#eef4ff;font-family:Vazirmatn,Tahoma,sans-serif}
+nav{padding:16px 20px;border-bottom:1px solid #1e293b;display:flex;gap:10px;align-items:center}
+.logo{font-family:Orbitron,sans-serif;color:#00e5ff;letter-spacing:3px;margin-left:auto}
+a{color:#00e5ff;text-decoration:none}
+.wrap{max-width:800px;margin:0 auto;padding:24px}
+.err{color:#f87171}
+table{width:100%;border-collapse:collapse}
+th,td{border-bottom:1px solid #1e293b;padding:8px;text-align:right}
+</style>
+</head>
+<body>
+<nav><span class="logo">MOLIDO</span><a href="/workforce.html">کارکنان</a><a href="/chat.html">چت</a></nav>
+<div class="wrap">
+<p>اقدام حساس کارکنان اینجا می‌ماند تا انسان تأیید کند.</p>
+<p class="err" id="err"></p>
+<table><thead><tr><th>شناسه</th><th>وضعیت</th><th>توضیح</th></tr></thead><tbody id="tb"></tbody></table>
+</div>
+<script>
+const token=localStorage.getItem('molido_token');
+if(!token) location.href='/enter.html';
+(async()=>{
+  const paths=['/api/v1/ai/approvals','/api/v1/approvals'];
+  for(const p of paths){
+    try{
+      const r=await fetch(p,{headers:{Accept:'application/json',Authorization:'Bearer '+token}});
+      const j=await r.json().catch(()=>({}));
+      if(!r.ok) continue;
+      const list=j.data||j.approvals||j||[];
+      const arr=Array.isArray(list)?list:[];
+      const tb=document.getElementById('tb');
+      if(!arr.length){tb.innerHTML='<tr><td colspan="3">مورد معلقی نیست</td></tr>';return}
+      arr.forEach(x=>{
+        const tr=document.createElement('tr');
+        [x.id,x.status,x.title||x.reason||x.action||''].forEach(c=>{const td=document.createElement('td');td.textContent=c??'';tr.appendChild(td)});
+        tb.appendChild(tr);
+      });
+      return;
+    }catch(e){}
+  }
+  document.getElementById('err').textContent='مسیر تأیید روی این سرور پاسخ نداد';
+})();
+</script>
+</body>
+</html>

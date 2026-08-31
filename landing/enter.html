@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="theme-color" content="#07070c"/>
+<title>ورود — MOLIDO</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Vazirmatn:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07070c;--cyan:#00e5ff;--purple:#a78bfa;--white:#eef4ff;--muted:#94a3b8;--card:#0c101c;--line:rgba(255,255,255,.08)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;background:
+radial-gradient(900px 500px at 80% -10%,rgba(0,229,255,.16),transparent 50%),
+radial-gradient(700px 400px at 0% 100%,rgba(167,139,250,.14),transparent 45%),
+var(--bg);color:var(--white);font-family:Vazirmatn,Tahoma,sans-serif}
+.wrap{width:420px;max-width:92vw}
+.brand{font-family:Orbitron,sans-serif;letter-spacing:4px;font-size:28px;text-align:center;margin-bottom:8px;background:linear-gradient(90deg,#fff,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{text-align:center;color:var(--muted);margin-bottom:22px}
+.box{background:rgba(12,16,28,.86);border:1px solid var(--line);border-radius:22px;padding:28px;box-shadow:0 20px 80px rgba(0,0,0,.45)}
+label{display:block;font-size:13px;color:var(--muted);margin:12px 0 6px}
+input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid #334155;background:#070b14;color:#fff;font-family:inherit}
+input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,229,255,.15)}
+button{width:100%;margin-top:18px;padding:12px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--cyan),#00b4d8);color:#021018;font-weight:700;font-family:inherit;cursor:pointer}
+button:hover{filter:brightness(1.06)}
+.err{min-height:22px;color:#f87171;font-size:13px;margin-top:8px}
+.links{display:flex;justify-content:space-between;margin-top:16px;font-size:13px}
+a{color:var(--cyan);text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">MOLIDO</div>
+  <p class="sub">ورود به مرکز فرمان</p>
+  <form class="box" id="f">
+    <label>ایمیل</label>
+    <input id="email" type="email" autocomplete="username" required>
+    <label>رمز عبور</label>
+    <input id="pass" type="password" autocomplete="current-password" required>
+    <div class="err" id="err"></div>
+    <button type="submit">ورود</button>
+    <div class="links"><a href="/">سایت</a><a href="/register.html">ثبت‌نام</a><a href="/shop.html">فروش</a></div>
+  </form>
+</div>
+<script>
+const err=document.getElementById('err');
+document.getElementById('f').addEventListener('submit',async e=>{
+  e.preventDefault();
+  err.textContent='';
+  try{
+    const r=await fetch('/api/v1/auth/login',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify({email:document.getElementById('email').value.trim(),password:document.getElementById('pass').value})
+    });
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok) throw new Error(j.message||'ورود ناموفق');
+    const token=j.token||(j.data&&j.data.token);
+    if(!token) throw new Error('توکن دریافت نشد');
+    localStorage.setItem('molido_token',token);
+    location.href='/panel.html';
+  }catch(x){err.textContent=x.message}
+});
+</script>
+</body>
+</html>

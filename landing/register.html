@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>ثبت‌نام — MOLIDO</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07070c;--cyan:#00e5ff;--purple:#a78bfa;--w:#eef4ff;--m:#94a3b8}
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(900px 500px at 80% -10%,rgba(0,229,255,.16),transparent 50%),var(--bg);color:var(--w);font-family:Vazirmatn,Tahoma,sans-serif}
+.wrap{width:420px;max-width:92vw}
+.brand{font-family:Orbitron,sans-serif;letter-spacing:4px;font-size:28px;text-align:center;margin-bottom:8px;background:linear-gradient(90deg,#fff,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{text-align:center;color:var(--m);margin-bottom:22px}
+.box{background:rgba(12,16,28,.86);border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:28px}
+label{display:block;font-size:13px;color:var(--m);margin:12px 0 6px}
+input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid #334155;background:#070b14;color:#fff;font-family:inherit}
+button{width:100%;margin-top:18px;padding:12px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--cyan),#00b4d8);color:#021018;font-weight:700;font-family:inherit;cursor:pointer}
+.err{min-height:22px;color:#f87171;font-size:13px;margin-top:8px}
+.links{display:flex;justify-content:space-between;margin-top:16px;font-size:13px}
+a{color:var(--cyan);text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">MOLIDO</div>
+  <p class="sub">ساخت حساب سازمان</p>
+  <form class="box" id="f">
+    <label>نام</label><input id="name" required>
+    <label>ایمیل</label><input id="email" type="email" required>
+    <label>نام سازمان</label><input id="org" required>
+    <label>رمز</label><input id="pass" type="password" required minlength="8">
+    <div class="err" id="err"></div>
+    <button type="submit">ثبت‌نام</button>
+    <div class="links"><a href="/enter.html">ورود</a><a href="/shop.html">فروش نرم‌افزار</a></div>
+  </form>
+</div>
+<script>
+document.getElementById('f').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const err=document.getElementById('err'); err.textContent='';
+  try{
+    const r=await fetch('/api/v1/auth/register',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify({
+        name:document.getElementById('name').value.trim(),
+        email:document.getElementById('email').value.trim(),
+        organization_name:document.getElementById('org').value.trim(),
+        password:document.getElementById('pass').value
+      })
+    });
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok) throw new Error(j.message||'ثبت‌نام ناموفق');
+    const token=j.token||(j.data&&j.data.token);
+    if(token) localStorage.setItem('molido_token',token);
+    location.href='/panel.html';
+  }catch(x){err.textContent=x.message}
+});
+</script>
+</body>
+</html>
