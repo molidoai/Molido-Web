@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>پرداخت — MOLIDO</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07070c;--cyan:#00e5ff;--w:#eef4ff;--m:#94a3b8}
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);color:var(--w);font-family:Vazirmatn,Tahoma,sans-serif}
+.wrap{width:420px;max-width:92vw}
+.brand{font-family:Orbitron,sans-serif;letter-spacing:3px;text-align:center;margin-bottom:8px;color:var(--cyan)}
+.box{background:#0b1220;border:1px solid #1e293b;border-radius:18px;padding:24px}
+label{display:block;margin:12px 0 6px;color:var(--m);font-size:13px}
+select,input{width:100%;padding:12px;border-radius:12px;border:1px solid #334155;background:#070b14;color:#fff;font-family:inherit}
+button{width:100%;margin-top:16px;padding:12px;border:0;border-radius:12px;background:linear-gradient(135deg,#00e5ff,#00b4d8);color:#021018;font-weight:700;cursor:pointer;font-family:inherit}
+.err{min-height:22px;margin-top:8px;color:#f87171;font-size:13px}
+a{color:var(--cyan);text-decoration:none;font-size:13px}
+.links{display:flex;justify-content:space-between;margin-top:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">MOLIDO</div>
+  <form class="box" id="f">
+    <label>محصول</label>
+    <select id="sku">
+      <option value="SHOP-WEB-PRO" data-price="28000000">فروشگاهی حرفه‌ای</option>
+      <option value="REST-WEB-PRO" data-price="28000000">رستوران حرفه‌ای</option>
+      <option value="CITY-MUNI-PRO" data-price="35000000">شهر الکترونیک حرفه‌ای</option>
+      <option value="TRAVEL-WEB-PRO" data-price="28000000">همسفر حرفه‌ای</option>
+    </select>
+    <label>مبلغ (ریال)</label>
+    <input id="amount" type="number" value="28000000">
+    <div class="err" id="err"></div>
+    <button type="submit">ادامه پرداخت</button>
+    <div class="links"><a href="/shop.html">کاتالوگ</a><a href="/terms.html">شرایط</a></div>
+  </form>
+</div>
+<script>
+const sku=document.getElementById('sku');
+const amount=document.getElementById('amount');
+sku.onchange=()=>{amount.value=sku.selectedOptions[0].dataset.price};
+document.getElementById('f').onsubmit=async e=>{
+  e.preventDefault();
+  const err=document.getElementById('err'); err.textContent='';
+  const token=localStorage.getItem('molido_token');
+  if(!token){location.href='/enter.html';return}
+  try{
+    const r=await fetch('/api/v1/payments',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json','Authorization':'Bearer '+token},
+      body:JSON.stringify({
+        amount:Number(amount.value),
+        currency:'IRR',
+        description:sku.value,
+        sku:sku.value
+      })
+    });
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok) throw new Error(j.message||('خطای پرداخت '+r.status));
+    const url=j.redirect_url||j.url||(j.data&&j.data.url);
+    if(url) location.href=url;
+    else err.textContent=j.message||'درخواست ثبت شد؛ درگاه هنوز به کلید زنده وصل نیست';
+  }catch(x){err.textContent=x.message}
+};
+</script>
+</body>
+</html>
