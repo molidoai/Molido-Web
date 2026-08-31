@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>کارکنان مجازی — MOLIDO</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#07070c;color:#eef4ff;font-family:Vazirmatn,Tahoma,sans-serif}
+nav{display:flex;gap:10px;align-items:center;padding:16px 20px;border-bottom:1px solid #1e293b}
+.logo{font-family:Orbitron,sans-serif;letter-spacing:3px;margin-left:auto;color:#00e5ff}
+a{color:#00e5ff;text-decoration:none}
+.wrap{max-width:900px;margin:0 auto;padding:24px 16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.card{background:#0b1220;border:1px solid #1e293b;border-radius:14px;padding:16px}
+h2{font-size:16px;color:#00e5ff;margin:0 0 8px}
+p{color:#94a3b8;font-size:14px}
+.err{color:#f87171}
+table{width:100%;border-collapse:collapse;margin-top:20px}
+th,td{border-bottom:1px solid #1e293b;padding:8px;text-align:right}
+</style>
+</head>
+<body>
+<nav>
+  <span class="logo">MOLIDO</span>
+  <a href="/">سایت</a>
+  <a href="/chat.html">چت</a>
+  <a href="/panel.html">پنل</a>
+</nav>
+<div class="wrap">
+  <h1>کارکنان مجازی</h1>
+  <p>هشت نقش سیستمی داخل CORE. کار حساس بدون تأیید انسان اجرا نمی‌شود.</p>
+  <div class="grid">
+    <div class="card"><h2>پشتیبان</h2><p>پاسخ مشتری و تیکت</p></div>
+    <div class="card"><h2>فروش</h2><p>سرنخ و پیگیری معامله</p></div>
+    <div class="card"><h2>مالی</h2><p>فاکتور و وصول</p></div>
+    <div class="card"><h2>انبار</h2><p>موجودی و سفارش</p></div>
+    <div class="card"><h2>دانش</h2><p>جستجو در پایگاه دانش</p></div>
+    <div class="card"><h2>امنیت</h2><p>بررسی درخواست پرخطر</p></div>
+    <div class="card"><h2>عملیات</h2><p>تسک و هماهنگی تیم</p></div>
+    <div class="card"><h2>مدیر</h2><p>خلاصه و تأیید نهایی</p></div>
+  </div>
+  <p class="err" id="err"></p>
+  <table><thead><tr><th>نام</th><th>نقش</th><th>وضعیت</th></tr></thead><tbody id="tb"></tbody></table>
+</div>
+<script>
+const token=localStorage.getItem('molido_token');
+const tb=document.getElementById('tb');
+(async()=>{
+  if(!token){tb.innerHTML='<tr><td colspan="3">برای دیدن وضعیت زنده وارد شوید</td></tr>';return}
+  try{
+    const r=await fetch('/api/v1/crm-erp/summary',{headers:{Accept:'application/json',Authorization:'Bearer '+token}});
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok) throw new Error(j.message||r.status);
+    const list=j.agents_list||[];
+    if(!list.length){tb.innerHTML='<tr><td colspan="3">کارمندی در این سازمان نیست</td></tr>';return}
+    list.forEach(a=>{
+      const tr=document.createElement('tr');
+      [a.name,a.role,a.status].forEach(c=>{const td=document.createElement('td');td.textContent=c??'';tr.appendChild(td)});
+      tb.appendChild(tr);
+    });
+  }catch(e){document.getElementById('err').textContent=e.message}
+})();
+</script>
+</body>
+</html>
